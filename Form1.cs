@@ -36,11 +36,11 @@ namespace ImageHelper
             imgScaled.Visible = false;
             sourceDir.Click += SourceLoad;
             dir1.Click += dir1Click;
-            dir2.Click += dir1Click;
-            dir3.Click += dir1Click;
-            dir4.Click += dir1Click;
-            dir5.Click += dir1Click;
-            dir6.Click += dir1Click;
+            dir2.Click += dir2Click;
+            dir3.Click += dir3Click;
+            dir4.Click += dir4Click;
+            dir5.Click += dir5Click;
+            dir6.Click += dir6Click;
             moveDirTxt.Click += moveDirClick;
 
         }
