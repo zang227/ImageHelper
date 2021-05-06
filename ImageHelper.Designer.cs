@@ -224,9 +224,9 @@ namespace ImageHelper
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(1542, 454);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 15);
+            this.label1.Size = new System.Drawing.Size(108, 15);
             this.label1.TabIndex = 19;
-            this.label1.Text = "Label 1";
+            this.label1.Text = "Image Dimensions:";
             // 
             // label2
             // 
@@ -234,9 +234,9 @@ namespace ImageHelper
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(1542, 481);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 15);
+            this.label2.Size = new System.Drawing.Size(78, 15);
             this.label2.TabIndex = 20;
-            this.label2.Text = "Label 2";
+            this.label2.Text = "Image Name:";
             // 
             // label3
             // 
@@ -244,9 +244,9 @@ namespace ImageHelper
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(1542, 511);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 15);
+            this.label3.Size = new System.Drawing.Size(71, 15);
             this.label3.TabIndex = 21;
-            this.label3.Text = "Label 3";
+            this.label3.Text = "Next Image:";
             // 
             // label4
             // 
@@ -254,9 +254,9 @@ namespace ImageHelper
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(1542, 536);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 15);
+            this.label4.Size = new System.Drawing.Size(108, 15);
             this.label4.TabIndex = 22;
-            this.label4.Text = "Label 4";
+            this.label4.Text = "Images Remaining:";
             // 
             // label5
             // 
@@ -264,9 +264,9 @@ namespace ImageHelper
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(1542, 564);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 15);
+            this.label5.Size = new System.Drawing.Size(53, 15);
             this.label5.TabIndex = 23;
-            this.label5.Text = "Label 5";
+            this.label5.Text = "Position:";
             // 
             // dir2
             // 
