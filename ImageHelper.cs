@@ -145,12 +145,6 @@ namespace ImageHelper
                 case '6':
                     imgMove(6);
                     break;
-
-
-
-
-
-
             }
         }
 
