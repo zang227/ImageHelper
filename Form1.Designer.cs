@@ -1,7 +1,7 @@
 ﻿
 namespace ImageHelper
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@ namespace ImageHelper
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnScale = new System.Windows.Forms.Button();
             this.dirsLoad = new System.Windows.Forms.Button();
             this.nextDir = new System.Windows.Forms.Button();
@@ -360,7 +360,7 @@ namespace ImageHelper
             this.moveDirTxt.Size = new System.Drawing.Size(170, 23);
             this.moveDirTxt.TabIndex = 31;
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -397,7 +397,7 @@ namespace ImageHelper
             this.Controls.Add(this.btnScale);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Image Helper";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.imgScaled)).EndInit();

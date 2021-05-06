@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace ImageHelper
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public FolderBrowserDialog dialog = new FolderBrowserDialog();
         public Boolean Scaling = false;
@@ -24,7 +24,7 @@ namespace ImageHelper
         public int dirPos = 0;
         public Image image;
         public string[] images;
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             panel1.AutoScroll = true;
