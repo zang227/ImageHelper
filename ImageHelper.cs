@@ -58,7 +58,7 @@ namespace ImageHelper
                         btnScale.Text = "Scaling OFF";
                         Scaling = false;
                     }
-                    if(Scaling == false)
+                    else
                     {
                         imgOriginal.Visible = false;
                         imgScaled.Visible = true;
