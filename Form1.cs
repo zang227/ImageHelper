@@ -41,8 +41,14 @@ namespace ImageHelper
             dir4.Click += dir4Click;
             dir5.Click += dir5Click;
             dir6.Click += dir6Click;
+            panel1.KeyPress += HotKey;
             moveDirTxt.Click += moveDirClick;
 
+        }
+
+        private void HotKey(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            Debug.WriteLine("You pressed " + e.KeyChar);
         }
 
         public void imgLoad()
@@ -95,6 +101,7 @@ namespace ImageHelper
 
         public void imgMove(int dest)
         {
+            panel1.Focus();
             var destination = "";
             if (dest == 1)
             {
@@ -220,6 +227,7 @@ namespace ImageHelper
 
         private void button3_Click(object sender, EventArgs e)
         {
+            panel1.Focus();
             if (Scaling == true)
             {
                 imgOriginal.Visible = true;
@@ -238,6 +246,7 @@ namespace ImageHelper
 
         private void loadSrcDir_Click(object sender, EventArgs e)
         {
+            panel1.Focus();
             srcLoad();
         }
 
@@ -266,7 +275,8 @@ namespace ImageHelper
 
         private void nextDir_Click(object sender, EventArgs e)
         {
-            if(dirPos < directories.Count - 1)
+            panel1.Focus();
+            if (dirPos < directories.Count - 1)
             {
                 dirPos++;
                 sourceDir.Text = (string)directories[dirPos];
@@ -276,6 +286,7 @@ namespace ImageHelper
 
         private void prevDir_Click(object sender, EventArgs e)
         {
+            panel1.Focus();
             if (dirPos > 0)
             {
                 dirPos--;
@@ -286,25 +297,29 @@ namespace ImageHelper
 
         private void moveDir_Click(object sender, EventArgs e)
         {
-            string[] s = sourceDir.Text.Split("\\");
-            string s2 = s[^1];
-            try
+            panel1.Focus();
+            if (!String.IsNullOrEmpty(moveDirTxt.Text))
             {
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                Directory.Move(sourceDir.Text, moveDirTxt.Text +"\\"+s2);
-                if (directories.Count > 0)
+                string[] s = sourceDir.Text.Split("\\");
+                string s2 = s[^1];
+                try
                 {
-                    directories.RemoveAt(dirPos);
-                    Debug.WriteLine((string)directories[dirPos]);
-                    sourceDir.Text = (string)directories[dirPos];
-                    srcLoad();
+                    imgScaled.Image.Dispose();
+                    imgOriginal.Image.Dispose();
+                    image.Dispose();
+                    Directory.Move(sourceDir.Text, moveDirTxt.Text + "\\" + s2);
+                    if (directories.Count > 0)
+                    {
+                        directories.RemoveAt(dirPos);
+                        Debug.WriteLine((string)directories[dirPos]);
+                        sourceDir.Text = (string)directories[dirPos];
+                        srcLoad();
+                    }
                 }
-            }
-            catch (Exception x)
-            {
-                Debug.WriteLine(x.Message);
+                catch (Exception x)
+                {
+                    Debug.WriteLine(x.Message);
+                }
             }
             
             
@@ -313,7 +328,8 @@ namespace ImageHelper
 
         private void prevImg_Click(object sender, EventArgs e)
         {
-            if(pos > 0)
+            panel1.Focus();
+            if (pos > 0)
             {
                 imgScaled.Image.Dispose();
                 imgOriginal.Image.Dispose();
@@ -325,7 +341,8 @@ namespace ImageHelper
 
         private void nextImg_Click(object sender, EventArgs e)
         {
-            if(pos < imageList.Count - 1)
+            panel1.Focus();
+            if (pos < imageList.Count - 1)
             {
                 imgScaled.Image.Dispose();
                 imgOriginal.Image.Dispose();
