@@ -87,7 +87,7 @@ namespace ImageHelper
             // 
             // nextDir
             // 
-            this.nextDir.Location = new System.Drawing.Point(256, 58);
+            this.nextDir.Location = new System.Drawing.Point(378, 58);
             this.nextDir.Name = "nextDir";
             this.nextDir.Size = new System.Drawing.Size(116, 33);
             this.nextDir.TabIndex = 5;
@@ -97,7 +97,7 @@ namespace ImageHelper
             // 
             // prevDir
             // 
-            this.prevDir.Location = new System.Drawing.Point(378, 58);
+            this.prevDir.Location = new System.Drawing.Point(256, 58);
             this.prevDir.Name = "prevDir";
             this.prevDir.Size = new System.Drawing.Size(116, 33);
             this.prevDir.TabIndex = 6;
