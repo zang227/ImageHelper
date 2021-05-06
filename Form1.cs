@@ -48,7 +48,110 @@ namespace ImageHelper
 
         private void HotKey(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
-            Debug.WriteLine("You pressed " + e.KeyChar);
+            switch (e.KeyChar)
+            {
+                case 'q':
+                    if (Scaling == true)
+                    {
+                        imgOriginal.Visible = true;
+                        imgScaled.Visible = false;
+                        btnScale.Text = "Scaling OFF";
+                        Scaling = false;
+                    }
+                    if(Scaling == false)
+                    {
+                        imgOriginal.Visible = false;
+                        imgScaled.Visible = true;
+                        btnScale.Text = "Scaling ON";
+                        Scaling = true;
+                    }
+                    break;
+                case 'w':
+                    if (dirPos < directories.Count - 1)
+                    {
+                        dirPos++;
+                        sourceDir.Text = (string)directories[dirPos];
+                        srcLoad();
+                    }
+                    break;
+                case 'a':
+                    if (pos > 0)
+                    {
+                        imgScaled.Image.Dispose();
+                        imgOriginal.Image.Dispose();
+                        image.Dispose();
+                        pos--;
+                        imgLoad();
+                    }
+                    break;
+                case 's':
+                    if (dirPos > 0)
+                    {
+                        dirPos--;
+                        sourceDir.Text = (string)directories[dirPos];
+                        srcLoad();
+                    }
+                    break;
+                case 'd':
+                    if (pos < imageList.Count - 1)
+                    {
+                        imgScaled.Image.Dispose();
+                        imgOriginal.Image.Dispose();
+                        image.Dispose();
+                        pos++;
+                        imgLoad();
+                    }
+                    break;
+                case 'e':
+                    if (!String.IsNullOrEmpty(moveDirTxt.Text))
+                    {
+                        string[] s = sourceDir.Text.Split("\\");
+                        string s2 = s[^1];
+                        try
+                        {
+                            imgScaled.Image.Dispose();
+                            imgOriginal.Image.Dispose();
+                            image.Dispose();
+                            Directory.Move(sourceDir.Text, moveDirTxt.Text + "\\" + s2);
+                            if (directories.Count > 0)
+                            {
+                                directories.RemoveAt(dirPos);
+                                Debug.WriteLine((string)directories[dirPos]);
+                                sourceDir.Text = (string)directories[dirPos];
+                                srcLoad();
+                            }
+                        }
+                        catch (Exception x)
+                        {
+                            Debug.WriteLine(x.Message);
+                        }
+                    }
+                    break;
+                case '1':
+                    imgMove(1);
+                    break;
+                case '2':
+                    imgMove(2);
+                    break;
+                case '3':
+                    imgMove(3);
+                    break;
+                case '4':
+                    imgMove(4);
+                    break;
+                case '5':
+                    imgMove(5);
+                    break;
+                case '6':
+                    imgMove(6);
+                    break;
+
+
+
+
+
+
+            }
         }
 
         public void imgLoad()
@@ -127,47 +230,50 @@ namespace ImageHelper
             {
                 destination = dir6.Text;
             }
-
-            if (imageList.Count > 0)
+            if (!String.IsNullOrEmpty(destination))
             {
+                if (imageList.Count > 0)
+                {
 
-                var x = pos;
-                var source = (string)imageList[pos];
-                string s = (string)imageList[pos];
-                string[] imgName = s.Split("\\");
-                s = imgName[^1];
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                if (imageList.Count == 1)
-                {
-                    File.Move(source, destination + "\\" + s);
-                    imageList.RemoveAt(x);
-                    imgOriginal.Image = null;
-                    imgScaled.Image = null;
-                }
-                else if (x + 1 == imageList.Count)
-                {
-                    pos--;
-                    imgLoad();
-                    File.Move(source, destination + "\\" + s);
-                    imageList.RemoveAt(x);
-
-                }
-                else
-                {
-                    pos++;
-                    imgLoad();
-                    File.Move(source, destination + "\\" + s);
-                    imageList.RemoveAt(x);
+                    var x = pos;
+                    var source = (string)imageList[pos];
+                    string s = (string)imageList[pos];
+                    string[] imgName = s.Split("\\");
+                    s = imgName[^1];
                     imgScaled.Image.Dispose();
                     imgOriginal.Image.Dispose();
                     image.Dispose();
-                    pos--;
-                    imgLoad();
+                    if (imageList.Count == 1)
+                    {
+                        File.Move(source, destination + "\\" + s);
+                        imageList.RemoveAt(x);
+                        imgOriginal.Image = null;
+                        imgScaled.Image = null;
+                    }
+                    else if (x + 1 == imageList.Count)
+                    {
+                        pos--;
+                        imgLoad();
+                        File.Move(source, destination + "\\" + s);
+                        imageList.RemoveAt(x);
+
+                    }
+                    else
+                    {
+                        pos++;
+                        imgLoad();
+                        File.Move(source, destination + "\\" + s);
+                        imageList.RemoveAt(x);
+                        imgScaled.Image.Dispose();
+                        imgOriginal.Image.Dispose();
+                        image.Dispose();
+                        pos--;
+                        imgLoad();
+                    }
                 }
             }
         }
+
 
         private void SourceLoad(object sender, System.EventArgs e)
         {
@@ -321,9 +427,6 @@ namespace ImageHelper
                     Debug.WriteLine(x.Message);
                 }
             }
-            
-            
-
         }
 
         private void prevImg_Click(object sender, EventArgs e)
