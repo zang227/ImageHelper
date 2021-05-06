@@ -58,7 +58,7 @@ namespace ImageHelper
                         btnScale.Text = "Scaling OFF";
                         Scaling = false;
                     }
-                    else
+                    if(Scaling == false)
                     {
                         imgOriginal.Visible = false;
                         imgScaled.Visible = true;
@@ -100,6 +100,10 @@ namespace ImageHelper
                         image.Dispose();
                         pos++;
                         imgLoad();
+                    }
+                    else
+                    {
+                        MessageBox.Show( "You've reached the end of the images in this directory.", "Image Helper Notice");
                     }
                     break;
                 case 'e':
@@ -446,6 +450,10 @@ namespace ImageHelper
                 image.Dispose();
                 pos++;
                 imgLoad();
+            }
+            else
+            {
+                MessageBox.Show("You've reached the end of the images in this directory.", "Image Helper Notice");
             }
         }
 
