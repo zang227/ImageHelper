@@ -64,7 +64,7 @@ By default image scaling is turned off, but you can also scale images using the 
 
 
 ## Hotkeys
-Hotkeys may be used to control the program. If they hotkeys are not working simply click on the imagebox to give it focus and then they should work.
+Hotkeys may be used to control the program. If the hotkeys are not working simply click on the imagebox to give it focus and then they should work.
 
 Currently hotkeys are unable to be changed and are as follows:
 * Q - Toggle Scaling On/Off
