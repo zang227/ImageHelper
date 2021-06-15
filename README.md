@@ -1,1 +1,1 @@
-﻿
+﻿Image Helper is a program used to aid in the sorting of images on your desktop.
