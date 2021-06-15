@@ -47,89 +47,26 @@ namespace ImageHelper
         }
 
         private void HotKey(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
+        { 
             switch (e.KeyChar)
             {
                 case 'q':
-                    if (Scaling == true)
-                    {
-                        imgOriginal.Visible = true;
-                        imgScaled.Visible = false;
-                        btnScale.Text = "Scaling OFF";
-                        Scaling = false;
-                    }
-                    if(Scaling == false)
-                    {
-                        imgOriginal.Visible = false;
-                        imgScaled.Visible = true;
-                        btnScale.Text = "Scaling ON";
-                        Scaling = true;
-                    }
+                    ScaleToggle();
                     break;
                 case 'w':
-                    if (dirPos < directories.Count - 1)
-                    {
-                        dirPos++;
-                        sourceDir.Text = (string)directories[dirPos];
-                        srcLoad();
-                    }
+                    NextDirectory();
                     break;
                 case 'a':
-                    if (pos > 0)
-                    {
-                        imgScaled.Image.Dispose();
-                        imgOriginal.Image.Dispose();
-                        image.Dispose();
-                        pos--;
-                        imgLoad();
-                    }
+                    PreviousImage();
                     break;
                 case 's':
-                    if (dirPos > 0)
-                    {
-                        dirPos--;
-                        sourceDir.Text = (string)directories[dirPos];
-                        srcLoad();
-                    }
+                    PreviousDirectory();
                     break;
                 case 'd':
-                    if (pos < imageList.Count - 1)
-                    {
-                        imgScaled.Image.Dispose();
-                        imgOriginal.Image.Dispose();
-                        image.Dispose();
-                        pos++;
-                        imgLoad();
-                    }
-                    else
-                    {
-                        MessageBox.Show( "You've reached the end of the images in this directory.", "Image Helper Notice");
-                    }
+                    NextImage();
                     break;
                 case 'e':
-                    if (!String.IsNullOrEmpty(moveDirTxt.Text))
-                    {
-                        string[] s = sourceDir.Text.Split("\\");
-                        string s2 = s[^1];
-                        try
-                        {
-                            imgScaled.Image.Dispose();
-                            imgOriginal.Image.Dispose();
-                            image.Dispose();
-                            Directory.Move(sourceDir.Text, moveDirTxt.Text + "\\" + s2);
-                            if (directories.Count > 0)
-                            {
-                                directories.RemoveAt(dirPos);
-                                Debug.WriteLine((string)directories[dirPos]);
-                                sourceDir.Text = (string)directories[dirPos];
-                                srcLoad();
-                            }
-                        }
-                        catch (Exception x)
-                        {
-                            Debug.WriteLine(x.Message);
-                        }
-                    }
+                    MoveDirectory();
                     break;
                 case '1':
                     imgMove(1);
@@ -273,6 +210,111 @@ namespace ImageHelper
         }
 
 
+        public void ScaleToggle()
+        {
+            panel1.Focus();
+            if (Scaling == true)
+            {
+                imgOriginal.Visible = true;
+                imgScaled.Visible = false;
+                btnScale.Text = "Scaling OFF";
+                Scaling = false;
+            }
+            else
+            {
+                imgOriginal.Visible = false;
+                imgScaled.Visible = true;
+                btnScale.Text = "Scaling ON";
+                Scaling = true;
+            }
+        }
+
+        public void NextDirectory()
+        {
+            panel1.Focus();
+            if (dirPos < directories.Count - 1)
+            {
+                imgScaled.Image.Dispose();
+                imgOriginal.Image.Dispose();
+                image.Dispose();
+                dirPos++;
+                sourceDir.Text = (string)directories[dirPos];
+                srcLoad();
+            }
+        }
+
+        public void PreviousDirectory()
+        {
+            panel1.Focus();
+            if (dirPos > 0)
+            {
+                imgScaled.Image.Dispose();
+                imgOriginal.Image.Dispose();
+                image.Dispose();
+                dirPos--;
+                sourceDir.Text = (string)directories[dirPos];
+                srcLoad();
+            }
+        }
+
+        public void MoveDirectory()
+        {
+            panel1.Focus();
+            if (!String.IsNullOrEmpty(moveDirTxt.Text))
+            {
+                string[] s = sourceDir.Text.Split("\\");
+                string s2 = s[^1];
+                try
+                {
+                    imgScaled.Image.Dispose();
+                    imgOriginal.Image.Dispose();
+                    image.Dispose();
+                    Directory.Move(sourceDir.Text, moveDirTxt.Text + "\\" + s2);
+                    if (directories.Count > 0)
+                    {
+                        directories.RemoveAt(dirPos);
+                        Debug.WriteLine((string)directories[dirPos]);
+                        sourceDir.Text = (string)directories[dirPos];
+                        srcLoad();
+                    }
+                }
+                catch (Exception x)
+                {
+                    Debug.WriteLine(x.Message);
+                }
+            }
+        }
+
+        public void PreviousImage()
+        {
+            panel1.Focus();
+            if (pos > 0)
+            {
+                imgScaled.Image.Dispose();
+                imgOriginal.Image.Dispose();
+                image.Dispose();
+                pos--;
+                imgLoad();
+            }
+        }
+
+        public void NextImage()
+        {
+            panel1.Focus();
+            if (pos < imageList.Count - 1)
+            {
+                imgScaled.Image.Dispose();
+                imgOriginal.Image.Dispose();
+                image.Dispose();
+                pos++;
+                imgLoad();
+            }
+            else
+            {
+                MessageBox.Show("You've reached the end of the images in this directory.", "Image Helper Notice");
+            }
+        }
+
         private void SourceLoad(object sender, System.EventArgs e)
         {
             panel1.Focus();
@@ -331,21 +373,7 @@ namespace ImageHelper
 
         private void button3_Click(object sender, EventArgs e)
         {
-            panel1.Focus();
-            if (Scaling == true)
-            {
-                imgOriginal.Visible = true;
-                imgScaled.Visible = false;
-                btnScale.Text = "Scaling OFF";
-                Scaling = false;
-            }
-            else
-            {
-                imgOriginal.Visible = false;
-                imgScaled.Visible = true;
-                btnScale.Text = "Scaling ON";
-                Scaling = true;
-            }
+            ScaleToggle();
         }
 
         private void loadSrcDir_Click(object sender, EventArgs e)
@@ -379,82 +407,27 @@ namespace ImageHelper
 
         private void nextDir_Click(object sender, EventArgs e)
         {
-            panel1.Focus();
-            if (dirPos < directories.Count - 1)
-            {
-                dirPos++;
-                sourceDir.Text = (string)directories[dirPos];
-                srcLoad();
-            }
+            NextDirectory();
         }
 
         private void prevDir_Click(object sender, EventArgs e)
         {
-            panel1.Focus();
-            if (dirPos > 0)
-            {
-                dirPos--;
-                sourceDir.Text = (string)directories[dirPos];
-                srcLoad();
-            }
+            PreviousDirectory();
         }
 
         private void moveDir_Click(object sender, EventArgs e)
         {
-            panel1.Focus();
-            if (!String.IsNullOrEmpty(moveDirTxt.Text))
-            {
-                string[] s = sourceDir.Text.Split("\\");
-                string s2 = s[^1];
-                try
-                {
-                    imgScaled.Image.Dispose();
-                    imgOriginal.Image.Dispose();
-                    image.Dispose();
-                    Directory.Move(sourceDir.Text, moveDirTxt.Text + "\\" + s2);
-                    if (directories.Count > 0)
-                    {
-                        directories.RemoveAt(dirPos);
-                        Debug.WriteLine((string)directories[dirPos]);
-                        sourceDir.Text = (string)directories[dirPos];
-                        srcLoad();
-                    }
-                }
-                catch (Exception x)
-                {
-                    Debug.WriteLine(x.Message);
-                }
-            }
+            MoveDirectory();
         }
 
         private void prevImg_Click(object sender, EventArgs e)
         {
-            panel1.Focus();
-            if (pos > 0)
-            {
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                pos--;
-                imgLoad();
-            }
+            PreviousImage();
         }
 
         private void nextImg_Click(object sender, EventArgs e)
         {
-            panel1.Focus();
-            if (pos < imageList.Count - 1)
-            {
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                pos++;
-                imgLoad();
-            }
-            else
-            {
-                MessageBox.Show("You've reached the end of the images in this directory.", "Image Helper Notice");
-            }
+            NextImage();
         }
 
         private void move1_Click(object sender, EventArgs e)
