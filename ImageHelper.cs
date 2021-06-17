@@ -24,10 +24,18 @@ namespace ImageHelper
         public int dirPos = 0;
         public Image image;
         public string[] images;
-        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6" };
+        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6"};
         public MainForm()
         {
             InitializeComponent();
+            //Load Hotkey Settings
+            var s = Properties.Settings.Default.Hotkeys;
+            string[] split = s.Split(',');
+            for(int i = 0; i < split.Length; i++)
+            {
+                keys[i] = split[i];
+            }
+            //Initialize Controls
             panel1.AutoScroll = true;
             panel1.Controls.Add(imgOriginal);
             panel1.Controls.Add(imgScaled);
@@ -124,11 +132,26 @@ namespace ImageHelper
                 {
                     keys[i] = popup.Hotkeys[i];
                 }
+                SaveHotkeys();
             }
             else if (dialogresult == DialogResult.Cancel)
             {
                 Console.WriteLine("You clicked either Cancel or X button in the top right corner");
             }
+        }
+
+        public void SaveHotkeys()
+        {
+            string s = "";
+            for(int i = 0; i < keys.Length; i++)
+            {
+                if (i < keys.Length - 1)
+                    s += keys[i] + ",";
+                else
+                    s += keys[i];
+            }
+            Properties.Settings.Default.Hotkeys = s;
+            Properties.Settings.Default.Save();
         }
 
         public void imgLoad()
