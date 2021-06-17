@@ -24,6 +24,7 @@ namespace ImageHelper
         public int dirPos = 0;
         public Image image;
         public string[] images;
+        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6" };
         public MainForm()
         {
             InitializeComponent();
@@ -48,44 +49,85 @@ namespace ImageHelper
 
         private void HotKey(object sender, System.Windows.Forms.KeyPressEventArgs e)
         { 
-            switch (e.KeyChar)
+            switch (HKSwitch(e))
             {
-                case 'q':
+                case 0:
                     ScaleToggle();
                     break;
-                case 'w':
+                case 1:
                     NextDirectory();
                     break;
-                case 'a':
-                    PreviousImage();
-                    break;
-                case 's':
+                case 2:
                     PreviousDirectory();
                     break;
-                case 'd':
-                    NextImage();
-                    break;
-                case 'e':
+                case 3:
                     MoveDirectory();
                     break;
-                case '1':
+                case 4:
+                    NextImage();
+                    break;
+                case 5:
+                    PreviousImage();
+                    break;
+                case 6:
                     imgMove(1);
                     break;
-                case '2':
+                case 7:
                     imgMove(2);
                     break;
-                case '3':
+                case 8:
                     imgMove(3);
                     break;
-                case '4':
+                case 9:
                     imgMove(4);
                     break;
-                case '5':
+                case 10:
                     imgMove(5);
                     break;
-                case '6':
+                case 11:
                     imgMove(6);
                     break;
+                case -1: //Key pressed does not correspond to a hotkey.
+                    break;
+            }
+        }
+
+
+        public int HKSwitch(KeyPressEventArgs e)
+        {
+            string s = e.KeyChar.ToString();
+            for(int i = 0; i < keys.Length; i++)
+            {
+                if(s == keys[i])
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+
+        private void hotkeysToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HotKeyConfig popup = new HotKeyConfig();
+            for(int i = 0; i < popup.buttons.Length; i++)
+            {
+                popup.buttons[i].Text = keys[i].ToUpper();
+                popup.Hotkeys[i] = keys[i];
+            }
+
+
+            DialogResult dialogresult = popup.ShowDialog();
+            if (dialogresult == DialogResult.OK)
+            {
+                for(int i = 0; i < keys.Length; i++)
+                {
+                    keys[i] = popup.Hotkeys[i];
+                }
+            }
+            else if (dialogresult == DialogResult.Cancel)
+            {
+                Console.WriteLine("You clicked either Cancel or X button in the top right corner");
             }
         }
 
@@ -132,6 +174,7 @@ namespace ImageHelper
                     {
                         imageList.Add(images[i]);
                     }
+                    imageList.Reverse();
                     imgLoad();
                 }
             }
