@@ -76,7 +76,12 @@ Hotkey Defaults are as follows:
 * Number Keys/Numpad 1-6 - Move Image to Directory 1-6 (Top move button is 1, bottom move button is 6)
 
 Hotkeys may be changed using the hotkey options in the options tab.
-
+The following are accepted Hotkey inputs:
+A-Z
+CTRL
+Punctuation Marks
+Number Keys (including NumPad)
+Enter
 
 
 
