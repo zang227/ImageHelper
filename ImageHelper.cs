@@ -20,6 +20,7 @@ namespace ImageHelper
         public Boolean Scaling = false;
         public ArrayList imageList = new ArrayList();
         public ArrayList directories = new ArrayList();
+        public string parentDirectory;
         public int pos = 0;
         public int dirPos = 0;
         public Image image;
@@ -115,30 +116,7 @@ namespace ImageHelper
         }
 
 
-        private void hotkeysToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            HotKeyConfig popup = new HotKeyConfig();
-            for(int i = 0; i < popup.buttons.Length; i++)
-            {
-                popup.buttons[i].Text = keys[i].ToUpper();
-                popup.Hotkeys[i] = keys[i];
-            }
 
-
-            DialogResult dialogresult = popup.ShowDialog();
-            if (dialogresult == DialogResult.OK)
-            {
-                for(int i = 0; i < keys.Length; i++)
-                {
-                    keys[i] = popup.Hotkeys[i];
-                }
-                SaveHotkeys();
-            }
-            else if (dialogresult == DialogResult.Cancel)
-            {
-                Console.WriteLine("You clicked either Cancel or X button in the top right corner");
-            }
-        }
 
         public void SaveHotkeys()
         {
@@ -275,7 +253,148 @@ namespace ImageHelper
             }
         }
 
+        public void DirectoriesLoad()
+        {
+            var children = Directory.GetDirectories(parentDirectory);
+            directories.Clear();
+            for (int i = 0; i < children.Length; i++)
+            {
+                directories.Add(children[i]);
+            }
+            dirPos = 0;
+            string s = "";
+            s += directories.Count;
+            label1.Text = s;
+            sourceDir.Text = (string)directories[dirPos];
+            srcLoad();
+        }
 
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "ImageHelper Saves | *.ihs";
+            saveFileDialog.DefaultExt = "ihs";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.Stream fileStream = saveFileDialog.OpenFile();
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(fileStream);
+                //sw.WriteLine("");
+                if (directories.Count == 0)
+                    sw.WriteLine("S");
+                else
+                    sw.WriteLine("M");
+                TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
+                for(int i = 0; i < moveDirs.Length; i++)
+                {
+                    if (moveDirs[i].Text == "")
+                        sw.WriteLine("null");
+                    else
+                        sw.WriteLine(moveDirs[i].Text);
+                }
+                sw.WriteLine(pos);
+                if (sourceDir.Text == "")
+                    sw.WriteLine("null");
+                else
+                    sw.WriteLine(sourceDir.Text);
+                if (directories.Count > 0)
+                {
+                    sw.WriteLine(parentDirectory);
+                    sw.WriteLine(dirPos);
+                    if (moveDirTxt.Text == "")
+                        sw.WriteLine("null");
+                    else
+                        sw.WriteLine(moveDirTxt.Text);
+                }
+                sw.Flush();
+                sw.Close();
+            }
+
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            /*
+             *  0   S/M
+             *  1   1
+             *  2   2
+             *  3   3
+             *  4   4
+             *  5   5
+             *  6   6
+             *  7   pos
+             *  8   SrcDirectory
+             *  9   Parent
+             *  10  dirPos
+             *  11  Move Directory         
+             */
+            TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "ImageHelper Saves | *.ihs";
+            if(open.ShowDialog() == DialogResult.OK)
+            {
+                string[] lines = System.IO.File.ReadAllLines(open.FileName);
+                if (lines[0] == "S")
+                {
+                    for(int i = 0; i < moveDirs.Length; i++)
+                    {
+                        if (lines[i + 1] != "null")
+                            moveDirs[i].Text = lines[i + 1];
+                    }
+                    if (lines[8] != "null")
+                    {
+                        sourceDir.Text = lines[8];
+                        srcLoad();
+                        pos = Int32.Parse(lines[7]);
+                        imgLoad();
+                    }
+                }
+                else //Multi Case
+                {
+                    for (int i = 0; i < moveDirs.Length; i++)
+                    {
+                        if (lines[i + 1] != "null")
+                            moveDirs[i].Text = lines[i + 1];
+                    }
+                    if (lines[8] != "null")
+                        sourceDir.Text = lines[8];
+                    parentDirectory = lines[9];
+                    if (lines[11] != "null")
+                        moveDirTxt.Text = lines[11];
+                    DirectoriesLoad();
+                    dirPos = Int32.Parse(lines[10]);
+                    sourceDir.Text = (string)directories[dirPos];
+                    srcLoad();
+                    pos = Int32.Parse(lines[7]);
+                    imgLoad();
+                }
+            }
+        }
+
+        private void hotkeysToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HotKeyConfig popup = new HotKeyConfig();
+            for (int i = 0; i < popup.buttons.Length; i++)
+            {
+                popup.buttons[i].Text = keys[i].ToUpper();
+                popup.Hotkeys[i] = keys[i];
+            }
+
+
+            DialogResult dialogresult = popup.ShowDialog();
+            if (dialogresult == DialogResult.OK)
+            {
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    keys[i] = popup.Hotkeys[i];
+                }
+                SaveHotkeys();
+            }
+            else if (dialogresult == DialogResult.Cancel)
+            {
+                Console.WriteLine("You clicked either Cancel or X button in the top right corner");
+            }
+        }
         public void ScaleToggle()
         {
             panel1.Focus();
@@ -452,23 +571,11 @@ namespace ImageHelper
         {
             panel1.Focus();
             dialog.ShowDialog();
-            string parent = dialog.SelectedPath;
-            if (parent != "") 
-            { 
-                var children = Directory.GetDirectories(parent);
-                for (int i = 0; i < children.Length; i++)
-                {
-                    directories.Add(children[i]);
-                }
-                dirPos = 0;
-                string s = ""; 
-                s += directories.Count;
-                label1.Text = s;
-                sourceDir.Text = (string)directories[dirPos];
-                srcLoad();
+            parentDirectory = dialog.SelectedPath;
+            if (parentDirectory != "") 
+            {
+                DirectoriesLoad();
             }
-
-
         }
 
         private void nextDir_Click(object sender, EventArgs e)
@@ -525,6 +632,7 @@ namespace ImageHelper
         {
             imgMove(6);
         }
+
 
     }
 }
