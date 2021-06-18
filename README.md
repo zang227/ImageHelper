@@ -66,7 +66,7 @@ By default image scaling is turned off, but you can also scale images using the 
 ## Hotkeys
 Hotkeys may be used to control the program. If the hotkeys are not working simply click on the imagebox to give it focus and then they should work.
 
-Currently hotkeys are unable to be changed and are as follows:
+Hotkey Defaults are as follows:
 * Q - Toggle Scaling On/Off
 * E - Move Directory
 * W - Next Directory
@@ -75,6 +75,7 @@ Currently hotkeys are unable to be changed and are as follows:
 * A - Previous Image
 * Number Keys/Numpad 1-6 - Move Image to Directory 1-6 (Top move button is 1, bottom move button is 6)
 
+Hotkeys may be changed using the hotkey options in the options tab.
 
 
 
