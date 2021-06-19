@@ -416,8 +416,14 @@ namespace ImageHelper
                     if (lines[8] != "null")
                     {
                         sourceDir.Text = lines[8];
+                        imgScaled.Image.Dispose();
+                        imgOriginal.Image.Dispose();
+                        image.Dispose();
                         srcLoad();
                         pos = Int32.Parse(lines[7]);
+                        imgScaled.Image.Dispose();
+                        imgOriginal.Image.Dispose();
+                        image.Dispose();
                         imgLoad();
                     }
                 }
@@ -436,8 +442,14 @@ namespace ImageHelper
                     DirectoriesLoad();
                     dirPos = Int32.Parse(lines[10]);
                     sourceDir.Text = (string)directories[dirPos];
+                    imgScaled.Image.Dispose();
+                    imgOriginal.Image.Dispose();
+                    image.Dispose();
                     srcLoad();
                     pos = Int32.Parse(lines[7]);
+                    imgScaled.Image.Dispose();
+                    imgOriginal.Image.Dispose();
+                    image.Dispose();
                     imgLoad();
                 }
                 saveFile = new FileInfo(open.FileName);
