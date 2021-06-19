@@ -74,6 +74,8 @@ Hotkey Defaults are as follows:
 * D - Next Image
 * A - Previous Image
 * Number Keys/Numpad 1-6 - Move Image to Directory 1-6 (Top move button is 1, bottom move button is 6)
+* X - Save
+* U - Undo Image Move
 
 Hotkeys may be changed using the hotkey options in the options tab.
 The following are accepted Hotkey inputs:
