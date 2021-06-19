@@ -25,8 +25,10 @@ namespace ImageHelper
         public int dirPos = 0;
         public Image image;
         public string[] images;
-        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6","x"};
+        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6","x","u"};
         public FileInfo saveFile = null;
+        public int movedPos = -1;
+        public string source, destination;
         public MainForm()
         {
             InitializeComponent();
@@ -99,6 +101,9 @@ namespace ImageHelper
                     break;
                 case 12:
                     Save();
+                    break;
+                case 13:
+                    Undo();
                     break;
                 case -1: //Key pressed does not correspond to a hotkey.
                     break;
@@ -185,7 +190,7 @@ namespace ImageHelper
         public void imgMove(int dest)
         {
             panel1.Focus();
-            var destination = "";
+            destination = "";
             if (dest == 1)
             {
                 destination = dir1.Text;
@@ -215,8 +220,8 @@ namespace ImageHelper
                 if (imageList.Count > 0)
                 {
 
-                    var x = pos;
-                    var source = (string)imageList[pos];
+                    movedPos = pos;
+                    source = (string)imageList[pos];
                     string s = (string)imageList[pos];
                     string[] imgName = s.Split("\\");
                     s = imgName[^1];
@@ -226,16 +231,16 @@ namespace ImageHelper
                     if (imageList.Count == 1)
                     {
                         File.Move(source, destination + "\\" + s);
-                        imageList.RemoveAt(x);
+                        imageList.RemoveAt(movedPos);
                         imgOriginal.Image = null;
                         imgScaled.Image = null;
                     }
-                    else if (x + 1 == imageList.Count)
+                    else if (movedPos + 1 == imageList.Count)
                     {
                         pos--;
                         imgLoad();
                         File.Move(source, destination + "\\" + s);
-                        imageList.RemoveAt(x);
+                        imageList.RemoveAt(movedPos);
 
                     }
                     else
@@ -243,7 +248,7 @@ namespace ImageHelper
                         pos++;
                         imgLoad();
                         File.Move(source, destination + "\\" + s);
-                        imageList.RemoveAt(x);
+                        imageList.RemoveAt(movedPos);
                         imgScaled.Image.Dispose();
                         imgOriginal.Image.Dispose();
                         image.Dispose();
@@ -349,6 +354,23 @@ namespace ImageHelper
             else
                 SaveAs();
             
+        }
+
+        public void Undo()
+        {
+            if (movedPos > -1)
+            {
+                string s = source;
+                string[] imgName = s.Split("\\");
+                s = imgName[^1];
+                imgScaled.Image.Dispose();
+                imgOriginal.Image.Dispose();
+                image.Dispose();
+                File.Move(destination + "\\" + s, source);
+                srcLoad();
+                pos = movedPos;
+                imgLoad();
+            }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -677,6 +699,11 @@ namespace ImageHelper
         private void move5_Click(object sender, EventArgs e)
         {
             imgMove(5);
+        }
+
+        private void undoImageMoveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Undo();
         }
 
         private void move6_Click(object sender, EventArgs e)

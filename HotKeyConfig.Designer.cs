@@ -58,6 +58,8 @@ namespace ImageHelper
             this.btn5 = new System.Windows.Forms.Button();
             this.btn12 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
+            this.btn13 = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -114,7 +116,7 @@ namespace ImageHelper
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(12, 303);
+            this.label6.Location = new System.Drawing.Point(399, 27);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(66, 21);
             this.label6.TabIndex = 5;
@@ -124,7 +126,7 @@ namespace ImageHelper
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(13, 349);
+            this.label7.Location = new System.Drawing.Point(400, 73);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(66, 21);
             this.label7.TabIndex = 6;
@@ -134,7 +136,7 @@ namespace ImageHelper
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(12, 395);
+            this.label8.Location = new System.Drawing.Point(399, 119);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(66, 21);
             this.label8.TabIndex = 7;
@@ -144,7 +146,7 @@ namespace ImageHelper
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label9.Location = new System.Drawing.Point(13, 441);
+            this.label9.Location = new System.Drawing.Point(400, 165);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(66, 21);
             this.label9.TabIndex = 8;
@@ -154,7 +156,7 @@ namespace ImageHelper
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(13, 487);
+            this.label10.Location = new System.Drawing.Point(400, 211);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(66, 21);
             this.label10.TabIndex = 9;
@@ -164,7 +166,7 @@ namespace ImageHelper
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label11.Location = new System.Drawing.Point(12, 533);
+            this.label11.Location = new System.Drawing.Point(399, 257);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(66, 21);
             this.label11.TabIndex = 10;
@@ -174,9 +176,9 @@ namespace ImageHelper
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(13, 633);
+            this.button1.Location = new System.Drawing.Point(90, 387);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(151, 34);
+            this.button1.Size = new System.Drawing.Size(222, 34);
             this.button1.TabIndex = 22;
             this.button1.Text = "Save";
             this.button1.UseVisualStyleBackColor = true;
@@ -185,9 +187,9 @@ namespace ImageHelper
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button2.Location = new System.Drawing.Point(210, 633);
+            this.button2.Location = new System.Drawing.Point(446, 387);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(151, 34);
+            this.button2.Size = new System.Drawing.Size(222, 34);
             this.button2.TabIndex = 23;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
@@ -210,7 +212,7 @@ namespace ImageHelper
             // 
             // btn6
             // 
-            this.btn6.Location = new System.Drawing.Point(210, 297);
+            this.btn6.Location = new System.Drawing.Point(597, 21);
             this.btn6.Name = "btn6";
             this.btn6.Size = new System.Drawing.Size(115, 36);
             this.btn6.TabIndex = 29;
@@ -218,7 +220,7 @@ namespace ImageHelper
             // 
             // btn7
             // 
-            this.btn7.Location = new System.Drawing.Point(210, 343);
+            this.btn7.Location = new System.Drawing.Point(597, 67);
             this.btn7.Name = "btn7";
             this.btn7.Size = new System.Drawing.Size(115, 36);
             this.btn7.TabIndex = 30;
@@ -226,7 +228,7 @@ namespace ImageHelper
             // 
             // btn8
             // 
-            this.btn8.Location = new System.Drawing.Point(210, 389);
+            this.btn8.Location = new System.Drawing.Point(597, 113);
             this.btn8.Name = "btn8";
             this.btn8.Size = new System.Drawing.Size(115, 36);
             this.btn8.TabIndex = 31;
@@ -234,7 +236,7 @@ namespace ImageHelper
             // 
             // btn9
             // 
-            this.btn9.Location = new System.Drawing.Point(210, 435);
+            this.btn9.Location = new System.Drawing.Point(597, 159);
             this.btn9.Name = "btn9";
             this.btn9.Size = new System.Drawing.Size(115, 36);
             this.btn9.TabIndex = 32;
@@ -242,7 +244,7 @@ namespace ImageHelper
             // 
             // btn10
             // 
-            this.btn10.Location = new System.Drawing.Point(210, 481);
+            this.btn10.Location = new System.Drawing.Point(597, 205);
             this.btn10.Name = "btn10";
             this.btn10.Size = new System.Drawing.Size(115, 36);
             this.btn10.TabIndex = 33;
@@ -250,7 +252,7 @@ namespace ImageHelper
             // 
             // btn11
             // 
-            this.btn11.Location = new System.Drawing.Point(210, 527);
+            this.btn11.Location = new System.Drawing.Point(597, 251);
             this.btn11.Name = "btn11";
             this.btn11.Size = new System.Drawing.Size(115, 36);
             this.btn11.TabIndex = 34;
@@ -300,7 +302,7 @@ namespace ImageHelper
             // 
             // btn12
             // 
-            this.btn12.Location = new System.Drawing.Point(210, 573);
+            this.btn12.Location = new System.Drawing.Point(210, 297);
             this.btn12.Name = "btn12";
             this.btn12.Size = new System.Drawing.Size(115, 36);
             this.btn12.TabIndex = 40;
@@ -310,17 +312,37 @@ namespace ImageHelper
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label13.Location = new System.Drawing.Point(12, 579);
+            this.label13.Location = new System.Drawing.Point(13, 303);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(46, 21);
             this.label13.TabIndex = 41;
             this.label13.Text = "Save";
             // 
+            // btn13
+            // 
+            this.btn13.Location = new System.Drawing.Point(597, 297);
+            this.btn13.Name = "btn13";
+            this.btn13.Size = new System.Drawing.Size(115, 36);
+            this.btn13.TabIndex = 42;
+            this.btn13.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label14.Location = new System.Drawing.Point(400, 303);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(151, 21);
+            this.label14.TabIndex = 43;
+            this.label14.Text = "Undo Image Move";
+            // 
             // HotKeyConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(401, 679);
+            this.ClientSize = new System.Drawing.Size(740, 433);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.btn13);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.btn12);
             this.Controls.Add(this.btn5);
@@ -387,5 +409,7 @@ namespace ImageHelper
         private System.Windows.Forms.Button btn5;
         private System.Windows.Forms.Button btn12;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btn13;
+        private System.Windows.Forms.Label label14;
     }
 }

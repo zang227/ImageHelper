@@ -14,11 +14,11 @@ namespace ImageHelper
     {
         // Scaling, Next Directory, Previous Directory, Move Directory, Next Image, Previous Image, 1, 2, 3, 4, 5, 6
         public Button[] buttons;
-        public String[] Hotkeys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6", "x"};
+        public String[] Hotkeys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6", "x","u"};
         public HotKeyConfig()
         {
             InitializeComponent();
-            buttons = new Button[]{btn0,btn1,btn2,btn3,btn4,btn5,btn6,btn7,btn8,btn9,btn10,btn11,btn12};
+            buttons = new Button[]{btn0,btn1,btn2,btn3,btn4,btn5,btn6,btn7,btn8,btn9,btn10,btn11,btn12,btn13};
             for(int i = 0; i < buttons.Length; i++)
             {
                 buttons[i].Click += BTNRename;

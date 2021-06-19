@@ -67,6 +67,7 @@ namespace ImageHelper
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoImageMoveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgScaled)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgOriginal)).BeginInit();
@@ -384,7 +385,8 @@ namespace ImageHelper
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
-            this.loadToolStripMenuItem});
+            this.loadToolStripMenuItem,
+            this.undoImageMoveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -421,9 +423,16 @@ namespace ImageHelper
             // hotkeysToolStripMenuItem
             // 
             this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
-            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.hotkeysToolStripMenuItem.Text = "Hotkeys";
             this.hotkeysToolStripMenuItem.Click += new System.EventHandler(this.hotkeysToolStripMenuItem_Click);
+            // 
+            // undoImageMoveToolStripMenuItem
+            // 
+            this.undoImageMoveToolStripMenuItem.Name = "undoImageMoveToolStripMenuItem";
+            this.undoImageMoveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoImageMoveToolStripMenuItem.Text = "Undo Image Move";
+            this.undoImageMoveToolStripMenuItem.Click += new System.EventHandler(this.undoImageMoveToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -514,6 +523,7 @@ namespace ImageHelper
         private System.Windows.Forms.ToolStripMenuItem hotkeysToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem undoImageMoveToolStripMenuItem;
     }
 }
 
