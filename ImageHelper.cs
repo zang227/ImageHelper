@@ -25,7 +25,8 @@ namespace ImageHelper
         public int dirPos = 0;
         public Image image;
         public string[] images;
-        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6"};
+        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6","x"};
+        public FileInfo saveFile = null;
         public MainForm()
         {
             InitializeComponent();
@@ -96,6 +97,9 @@ namespace ImageHelper
                 case 11:
                     imgMove(6);
                     break;
+                case 12:
+                    Save();
+                    break;
                 case -1: //Key pressed does not correspond to a hotkey.
                     break;
             }
@@ -114,9 +118,6 @@ namespace ImageHelper
             }
             return -1;
         }
-
-
-
 
         public void SaveHotkeys()
         {
@@ -269,8 +270,7 @@ namespace ImageHelper
             srcLoad();
         }
 
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        public void SaveAs()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "ImageHelper Saves | *.ihs";
@@ -279,13 +279,50 @@ namespace ImageHelper
             {
                 System.IO.Stream fileStream = saveFileDialog.OpenFile();
                 System.IO.StreamWriter sw = new System.IO.StreamWriter(fileStream);
-                //sw.WriteLine("");
                 if (directories.Count == 0)
                     sw.WriteLine("S");
                 else
                     sw.WriteLine("M");
                 TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
-                for(int i = 0; i < moveDirs.Length; i++)
+                for (int i = 0; i < moveDirs.Length; i++)
+                {
+                    if (moveDirs[i].Text == "")
+                        sw.WriteLine("null");
+                    else
+                        sw.WriteLine(moveDirs[i].Text);
+                }
+                sw.WriteLine(pos);
+                if (sourceDir.Text == "")
+                    sw.WriteLine("null");
+                else
+                    sw.WriteLine(sourceDir.Text);
+                if (directories.Count > 0)
+                {
+                    sw.WriteLine(parentDirectory);
+                    sw.WriteLine(dirPos);
+                    if (moveDirTxt.Text == "")
+                        sw.WriteLine("null");
+                    else
+                        sw.WriteLine(moveDirTxt.Text);
+                }
+                sw.Flush();
+                sw.Close();
+                saveFile = new FileInfo(saveFileDialog.FileName);
+            }
+        }
+
+        public void Save()
+        {
+            if (saveFile != null)
+            {
+                System.IO.File.WriteAllText(saveFile.FullName, string.Empty);
+                System.IO.StreamWriter sw = saveFile.AppendText();
+                if (directories.Count == 0)
+                    sw.WriteLine("S");
+                else
+                    sw.WriteLine("M");
+                TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
+                for (int i = 0; i < moveDirs.Length; i++)
                 {
                     if (moveDirs[i].Text == "")
                         sw.WriteLine("null");
@@ -309,34 +346,47 @@ namespace ImageHelper
                 sw.Flush();
                 sw.Close();
             }
-
+            else
+                SaveAs();
+            
         }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             /*
-             *  0   S/M
-             *  1   1
-             *  2   2
-             *  3   3
-             *  4   4
-             *  5   5
-             *  6   6
-             *  7   pos
-             *  8   SrcDirectory
-             *  9   Parent
-             *  10  dirPos
-             *  11  Move Directory         
-             */
+            *  0   S/M
+            *  1   1
+            *  2   2
+            *  3   3
+            *  4   4
+            *  5   5
+            *  6   6
+            *  7   pos
+            *  8   SrcDirectory
+            *  9   Parent
+            *  10  dirPos
+            *  11  Move Directory         
+            */
             TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "ImageHelper Saves | *.ihs";
-            if(open.ShowDialog() == DialogResult.OK)
+            if (open.ShowDialog() == DialogResult.OK)
             {
                 string[] lines = System.IO.File.ReadAllLines(open.FileName);
                 if (lines[0] == "S")
                 {
-                    for(int i = 0; i < moveDirs.Length; i++)
+                    for (int i = 0; i < moveDirs.Length; i++)
                     {
                         if (lines[i + 1] != "null")
                             moveDirs[i].Text = lines[i + 1];
@@ -368,6 +418,7 @@ namespace ImageHelper
                     pos = Int32.Parse(lines[7]);
                     imgLoad();
                 }
+                saveFile = new FileInfo(open.FileName);
             }
         }
 
@@ -632,7 +683,5 @@ namespace ImageHelper
         {
             imgMove(6);
         }
-
-
     }
 }

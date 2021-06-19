@@ -56,6 +56,8 @@ namespace ImageHelper
             this.btn2 = new System.Windows.Forms.Button();
             this.btn3 = new System.Windows.Forms.Button();
             this.btn5 = new System.Windows.Forms.Button();
+            this.btn12 = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -172,7 +174,7 @@ namespace ImageHelper
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(6, 599);
+            this.button1.Location = new System.Drawing.Point(13, 633);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(151, 34);
             this.button1.TabIndex = 22;
@@ -183,7 +185,7 @@ namespace ImageHelper
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button2.Location = new System.Drawing.Point(190, 599);
+            this.button2.Location = new System.Drawing.Point(210, 633);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(151, 34);
             this.button2.TabIndex = 23;
@@ -296,11 +298,31 @@ namespace ImageHelper
             this.btn5.TabIndex = 39;
             this.btn5.UseVisualStyleBackColor = true;
             // 
+            // btn12
+            // 
+            this.btn12.Location = new System.Drawing.Point(210, 573);
+            this.btn12.Name = "btn12";
+            this.btn12.Size = new System.Drawing.Size(115, 36);
+            this.btn12.TabIndex = 40;
+            this.btn12.UseVisualStyleBackColor = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label13.Location = new System.Drawing.Point(12, 579);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(46, 21);
+            this.label13.TabIndex = 41;
+            this.label13.Text = "Save";
+            // 
             // HotKeyConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(397, 645);
+            this.ClientSize = new System.Drawing.Size(401, 679);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.btn12);
             this.Controls.Add(this.btn5);
             this.Controls.Add(this.btn3);
             this.Controls.Add(this.btn2);
@@ -363,5 +385,7 @@ namespace ImageHelper
         private System.Windows.Forms.Button btn2;
         private System.Windows.Forms.Button btn3;
         private System.Windows.Forms.Button btn5;
+        private System.Windows.Forms.Button btn12;
+        private System.Windows.Forms.Label label13;
     }
 }
