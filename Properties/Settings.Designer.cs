@@ -25,7 +25,7 @@ namespace ImageHelper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("q,w,s,e,d,a,1,2,3,4,5,6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("q,w,s,e,d,a,1,2,3,4,5,6,x,u")]
         public string Hotkeys {
             get {
                 return ((string)(this["Hotkeys"]));
