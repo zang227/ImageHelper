@@ -79,11 +79,11 @@ Hotkey Defaults are as follows:
 
 Hotkeys may be changed using the hotkey options in the options tab.
 The following are accepted Hotkey inputs:
-A-Z
-CTRL
-Punctuation Marks
-Number Keys (including NumPad)
-Enter
+* A-Z
+* CTRL
+* Punctuation Marks
+* Number Keys (including NumPad)
+* Enter
 
 
 
