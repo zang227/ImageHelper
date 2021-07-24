@@ -32,6 +32,7 @@ namespace ImageHelper
         public MainForm()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
             //Load Hotkey Settings
             var s = Properties.Settings.Default.Hotkeys;
             string[] split = s.Split(',');
@@ -140,6 +141,7 @@ namespace ImageHelper
 
         public void imgLoad()
         {
+
             image = Image.FromFile((string)imageList[pos]);
             string s = (string)imageList[pos];
             string[] imgName = s.Split("\\");
@@ -368,6 +370,9 @@ namespace ImageHelper
                 image.Dispose();
                 File.Move(destination + "\\" + s, source);
                 srcLoad();
+                imgScaled.Image.Dispose();
+                imgOriginal.Image.Dispose();
+                image.Dispose();
                 pos = movedPos;
                 imgLoad();
             }
@@ -416,9 +421,6 @@ namespace ImageHelper
                     if (lines[8] != "null")
                     {
                         sourceDir.Text = lines[8];
-                        imgScaled.Image.Dispose();
-                        imgOriginal.Image.Dispose();
-                        image.Dispose();
                         srcLoad();
                         pos = Int32.Parse(lines[7]);
                         imgScaled.Image.Dispose();
