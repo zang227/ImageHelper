@@ -26,9 +26,10 @@ namespace ImageHelper
         public Image image;
         public string[] images;
         public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6","x","u"};
+        public ArrayList actions = new ArrayList();
         public FileInfo saveFile = null;
         public int movedPos = -1;
-        public string source, destination;
+        //public string source, destination;
         public MainForm()
         {
             InitializeComponent();
@@ -191,39 +192,39 @@ namespace ImageHelper
 
         public void imgMove(int dest)
         {
+            Action move = new Action("","",Type.Image,this);
             panel1.Focus();
-            destination = "";
             if (dest == 1)
             {
-                destination = dir1.Text;
+                move.destination = dir1.Text;
             }
             if (dest == 2)
             {
-                destination = dir2.Text;
+                move.destination = dir2.Text;
             }
             if (dest == 3)
             {
-                destination = dir3.Text;
+                move.destination = dir3.Text;
             }
             if (dest == 4)
             {
-                destination = dir4.Text;
+                move.destination = dir4.Text;
             }
             if (dest == 5)
             {
-                destination = dir5.Text;
+                move.destination = dir5.Text;
             }
             if (dest == 6)
             {
-                destination = dir6.Text;
+                move.destination = dir6.Text;
             }
-            if (!String.IsNullOrEmpty(destination))
+            if (!String.IsNullOrEmpty(move.destination))
             {
                 if (imageList.Count > 0)
                 {
 
                     movedPos = pos;
-                    source = (string)imageList[pos];
+                    move.source = (string)imageList[pos];
                     string s = (string)imageList[pos];
                     string[] imgName = s.Split("\\");
                     s = imgName[^1];
@@ -232,7 +233,7 @@ namespace ImageHelper
                     image.Dispose();
                     if (imageList.Count == 1)
                     {
-                        File.Move(source, destination + "\\" + s);
+                        File.Move(move.source, move.destination + "\\" + s);
                         imageList.RemoveAt(movedPos);
                         imgOriginal.Image = null;
                         imgScaled.Image = null;
@@ -241,7 +242,7 @@ namespace ImageHelper
                     {
                         pos--;
                         imgLoad();
-                        File.Move(source, destination + "\\" + s);
+                        File.Move(move.source, move.destination + "\\" + s);
                         imageList.RemoveAt(movedPos);
 
                     }
@@ -249,7 +250,7 @@ namespace ImageHelper
                     {
                         pos++;
                         imgLoad();
-                        File.Move(source, destination + "\\" + s);
+                        File.Move(move.source, move.destination + "\\" + s);
                         imageList.RemoveAt(movedPos);
                         imgScaled.Image.Dispose();
                         imgOriginal.Image.Dispose();
@@ -257,6 +258,8 @@ namespace ImageHelper
                         pos--;
                         imgLoad();
                     }
+
+                    actions.Add(move);
                 }
             }
         }
@@ -360,22 +363,10 @@ namespace ImageHelper
 
         public void Undo()
         {
-            if (movedPos > -1)
-            {
-                string s = source;
-                string[] imgName = s.Split("\\");
-                s = imgName[^1];
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                File.Move(destination + "\\" + s, source);
-                srcLoad();
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                pos = movedPos;
-                imgLoad();
-            }
+            Action action = (Action)actions[(actions.Count - 1)];
+            action.Undo();
+
+            
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -532,7 +523,8 @@ namespace ImageHelper
         public void MoveDirectory()
         {
             panel1.Focus();
-            if (!String.IsNullOrEmpty(moveDirTxt.Text))
+            Action action = new Action(sourceDir.Text, moveDirTxt.Text, Type.Directory, this);
+            if (!String.IsNullOrEmpty(action.destination))
             {
                 string[] s = sourceDir.Text.Split("\\");
                 string s2 = s[^1];
@@ -541,7 +533,8 @@ namespace ImageHelper
                     imgScaled.Image.Dispose();
                     imgOriginal.Image.Dispose();
                     image.Dispose();
-                    Directory.Move(sourceDir.Text, moveDirTxt.Text + "\\" + s2);
+                    Directory.Move(action.source, action.destination + "\\" + s2);
+                    actions.Add(action);
                     if (directories.Count > 0)
                     {
                         directories.RemoveAt(dirPos);
@@ -723,6 +716,78 @@ namespace ImageHelper
         private void move6_Click(object sender, EventArgs e)
         {
             imgMove(6);
+        }
+    }
+    public enum Type { Image, Directory };
+
+    public class Action
+    {
+        MainForm form;
+        public string source, destination;
+        public Type type;
+        
+
+        public Action(string src, string dest, Type ActionType, MainForm main)
+        {
+            source = src;
+            destination = dest;
+            type = ActionType;
+            form = main;
+            
+        }
+
+        public void Undo()
+        {
+            if(type == Type.Image)
+            {
+                if (form.movedPos > -1)
+                {
+                    string s = source;
+                    string[] imgName = s.Split("\\");
+                    s = imgName[^1];
+                    form.imgScaled.Image.Dispose();
+                    form.imgOriginal.Image.Dispose();
+                    form.image.Dispose();
+                    File.Move(destination + "\\" + s, source);
+                    form.srcLoad();
+                    form.imgScaled.Image.Dispose();
+                    form.imgOriginal.Image.Dispose();
+                    form.image.Dispose();
+                    form.pos = form.movedPos;
+                    form.imgLoad();
+                    form.actions.RemoveAt(form.actions.Count - 1);
+                }
+                
+            }
+            else
+            {
+                form.panel1.Focus();
+                if (!String.IsNullOrEmpty(destination))
+                {
+                    string[] s = source.Split("\\");
+                    string s2 = s[^1];
+                    try
+                    {
+                        form.imgScaled.Image.Dispose();
+                        form.imgOriginal.Image.Dispose();
+                        form.image.Dispose();
+                        Directory.Move(destination + "\\" + s2, source);
+                        var pos = form.dirPos;
+                        form.DirectoriesLoad();
+                        form.imgScaled.Image.Dispose();
+                        form.imgOriginal.Image.Dispose();
+                        form.image.Dispose();
+                        form.dirPos = pos;
+                        form.srcLoad();
+                        form.actions.RemoveAt(form.actions.Count - 1);
+                    }
+                    catch (Exception x)
+                    {
+                        Debug.WriteLine(x.Message);
+                    }
+                }
+            }
+           
         }
     }
 }

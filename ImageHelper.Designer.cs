@@ -65,9 +65,9 @@ namespace ImageHelper
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoImageMoveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.undoImageMoveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgScaled)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgOriginal)).BeginInit();
@@ -331,6 +331,7 @@ namespace ImageHelper
             // 
             // imgScaled
             // 
+            this.imgScaled.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.imgScaled.Dock = System.Windows.Forms.DockStyle.Fill;
             this.imgScaled.Location = new System.Drawing.Point(0, 0);
             this.imgScaled.Name = "imgScaled";
@@ -394,23 +395,30 @@ namespace ImageHelper
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+            // 
+            // undoImageMoveToolStripMenuItem
+            // 
+            this.undoImageMoveToolStripMenuItem.Name = "undoImageMoveToolStripMenuItem";
+            this.undoImageMoveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.undoImageMoveToolStripMenuItem.Text = "Undo Image Move";
+            this.undoImageMoveToolStripMenuItem.Click += new System.EventHandler(this.undoImageMoveToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -423,16 +431,9 @@ namespace ImageHelper
             // hotkeysToolStripMenuItem
             // 
             this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
-            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.hotkeysToolStripMenuItem.Text = "Hotkeys";
             this.hotkeysToolStripMenuItem.Click += new System.EventHandler(this.hotkeysToolStripMenuItem_Click);
-            // 
-            // undoImageMoveToolStripMenuItem
-            // 
-            this.undoImageMoveToolStripMenuItem.Name = "undoImageMoveToolStripMenuItem";
-            this.undoImageMoveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.undoImageMoveToolStripMenuItem.Text = "Undo Image Move";
-            this.undoImageMoveToolStripMenuItem.Click += new System.EventHandler(this.undoImageMoveToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -500,20 +501,12 @@ namespace ImageHelper
         private System.Windows.Forms.Button move4;
         private System.Windows.Forms.Button move5;
         private System.Windows.Forms.Button move6;
-        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox dir2;
-        private System.Windows.Forms.TextBox dir3;
-        private System.Windows.Forms.TextBox dir4;
-        private System.Windows.Forms.TextBox dir5;
-        private System.Windows.Forms.TextBox dir6;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox imgOriginal;
-        private System.Windows.Forms.PictureBox imgScaled;
-        private System.Windows.Forms.TextBox dir1;
+        public System.Windows.Forms.TextBox dir6;
         private System.Windows.Forms.TextBox sourceDir;
         private System.Windows.Forms.TextBox moveDirTxt;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -524,6 +517,14 @@ namespace ImageHelper
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoImageMoveToolStripMenuItem;
+        public System.Windows.Forms.PictureBox imgOriginal;
+        public System.Windows.Forms.PictureBox imgScaled;
+        public System.Windows.Forms.TextBox dir2;
+        public System.Windows.Forms.TextBox dir3;
+        public System.Windows.Forms.TextBox dir4;
+        public System.Windows.Forms.TextBox dir1;
+        public System.Windows.Forms.TextBox dir5;
+        public System.Windows.Forms.Panel panel1;
     }
 }
 
