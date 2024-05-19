@@ -1,94 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ImageHelper
 {
     public partial class HotKeyConfig : Form
     {
-        // Scaling, Next Directory, Previous Directory, Move Directory, Next Image, Previous Image, 1, 2, 3, 4, 5, 6
-        public Button[] buttons;
-        public String[] Hotkeys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6", "x","u"};
+        public readonly List<Button> _buttons;
+        public string[] Hotkeys { get; private set; } = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6", "x", "u" };
+
         public HotKeyConfig()
         {
             InitializeComponent();
-            buttons = new Button[]{btn0,btn1,btn2,btn3,btn4,btn5,btn6,btn7,btn8,btn9,btn10,btn11,btn12,btn13};
-            for(int i = 0; i < buttons.Length; i++)
-            {
-                buttons[i].Click += BTNRename;
-            }
-
-
+            _buttons = new List<Button> { btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11, btn12, btn13 };
+            _buttons.ForEach(button => button.Click += RenameButton);
         }
 
-        private void HotKeyListener(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        private void RenameButton(object sender, EventArgs e)
         {
-            var button = ((Button)sender);
-            int index = ButtonIndex(button);
-            button.Text = e.KeyChar.ToString().ToUpper();
-            Hotkeys[index] = e.KeyChar.ToString();
-            for (int i = 0; i < buttons.Length; i++)
+            if (sender is Button button)
             {
-                if (i != index)
-                    if (button.Text == buttons[i].Text)
-                    {
-                        buttons[i].Text = "";
-                        Hotkeys[i] = "";
-                    } 
-            }
-            button.KeyPress -= HotKeyListener;
-            ButtonLock(-1);
-
-        }
-
-        public void BTNRename(object sender, EventArgs e)
-        {
-            int index = ButtonIndex((Button)sender);
-            if(index > -1)
-            {
-                ButtonLock(index);
-                buttons[index].Text = "Press any key...";
-                buttons[index].KeyPress += HotKeyListener;
-            }
-            
-        }
-
-        public int ButtonIndex(Button b)
-        {
-            for(int i = 0; i < buttons.Length; i++)
-            {
-                if (b.Name == buttons[i].Name)
-                    return i;
-            }
-            return -1;
-        }
-
-        public void ButtonLock(int index)//Send -1 index to unlock buttons
-        {
-            if(index > -1)
-            {
-                for (int i = 0; i < buttons.Length; i++)
+                int index = _buttons.IndexOf(button);
+                if (index >= 0)
                 {
-                    if (i != index)
+                    LockButtons(index);
+                    button.Text = "Press any key...";
+                    button.KeyPress += HotKeyListener;
+                }
+            }
+        }
+
+        private void HotKeyListener(object sender, KeyPressEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                int index = _buttons.IndexOf(button);
+                button.Text = e.KeyChar.ToString().ToUpper();
+                Hotkeys[index] = e.KeyChar.ToString();
+
+                for (int i = 0; i < _buttons.Count; i++)
+                {
+                    if (i != index && button.Text == _buttons[i].Text)
                     {
-                        buttons[i].Enabled = false;
+                        _buttons[i].Text = string.Empty;
+                        Hotkeys[i] = string.Empty;
                     }
                 }
-            }
-            else
-            {
-                for (int i = 0; i < buttons.Length; i++)
-                {
-                        buttons[i].Enabled = true;
-                }
+
+                button.KeyPress -= HotKeyListener;
+                LockButtons(-1);
             }
         }
 
+        private void LockButtons(int index)
+        {
+            _buttons.ForEach(button => button.Enabled = index < 0 || _buttons.IndexOf(button) == index);
+        }
     }
 }

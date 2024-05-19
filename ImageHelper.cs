@@ -1,578 +1,343 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using Microsoft.VisualBasic.FileIO;
 
 namespace ImageHelper
 {
     public partial class MainForm : Form
     {
-        public FolderBrowserDialog dialog = new FolderBrowserDialog();
-        public Boolean Scaling = false;
-        public ArrayList imageList = new ArrayList();
-        public ArrayList directories = new ArrayList();
-        public string parentDirectory;
-        public int pos = 0;
-        public int dirPos = 0;
-        public Image image;
-        public string[] images;
-        public string[] keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6","x","u"};
-        public ArrayList actions = new ArrayList();
-        public FileInfo saveFile = null;
-        public int movedPos = -1;
-        //public string source, destination;
+        public readonly FolderBrowserDialog _dialog = new();
+        public bool _overWrite;
+        public bool _scaling;
+        public readonly List<string> _imageList = new();
+        public readonly List<string> _directories = new();
+        public string _parentDirectory;
+        public int _pos;
+        public int _dirPos;
+        public Image _image;
+        public readonly string[] _keys = { "q", "w", "s", "e", "d", "a", "1", "2", "3", "4", "5", "6", "x", "u" };
+        public readonly List<Action> _actions = new();
+        public FileInfo _saveFile;
+        public bool _isPanning;
+        public Point _panStartPoint;
+        public readonly Stack<Action> _redoActions = new();
+
+
         public MainForm()
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized;
-            //Load Hotkey Settings
-            var s = Properties.Settings.Default.Hotkeys;
-            string[] split = s.Split(',');
-            for(int i = 0; i < split.Length; i++)
-            {
-                keys[i] = split[i];
-            }
-            //Initialize Controls
+            WindowState = FormWindowState.Maximized;
+            LoadHotkeys();
+
             panel1.AutoScroll = true;
             panel1.Controls.Add(imgOriginal);
             panel1.Controls.Add(imgScaled);
             imgOriginal.SizeMode = PictureBoxSizeMode.AutoSize;
             imgScaled.SizeMode = PictureBoxSizeMode.Zoom;
-            imgOriginal.Visible = true;
-            imgScaled.Visible = false;
-            sourceDir.Click += SourceLoad;
-            dir1.Click += dir1Click;
-            dir2.Click += dir2Click;
-            dir3.Click += dir3Click;
-            dir4.Click += dir4Click;
-            dir5.Click += dir5Click;
-            dir6.Click += dir6Click;
-            panel1.KeyPress += HotKey;
-            moveDirTxt.Click += moveDirClick;
 
+            InitializeEventHandlers();
         }
 
-        private void HotKey(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        { 
-            switch (HKSwitch(e))
+        private void InitializeEventHandlers()
+        {
+            sourceDir.Click += (_, _) => LoadDirectory(sourceDir);
+            dir1.Click += (_, _) => LoadDirectory(dir1);
+            dir2.Click += (_, _) => LoadDirectory(dir2);
+            dir3.Click += (_, _) => LoadDirectory(dir3);
+            dir4.Click += (_, _) => LoadDirectory(dir4);
+            dir5.Click += (_, _) => LoadDirectory(dir5);
+            dir6.Click += (_, _) => LoadDirectory(dir6);
+            moveDirTxt.Click += (_, _) => LoadDirectory(moveDirTxt);
+
+            panel1.KeyPress += HotKeyHandler;
+            imgOriginal.MouseDown += PictureBox_MouseDown;
+            imgOriginal.MouseMove += PictureBox_MouseMove;
+            imgOriginal.MouseUp += PictureBox_MouseUp;
+
+            // Additional button event handlers
+            btnScale.Click += (_, _) => ToggleScaling();
+            dirsLoad.Click += (_, _) => LoadDirectories();
+            nextDir.Click += (_, _) => NextDirectory();
+            prevDir.Click += (_, _) => PreviousDirectory();
+            moveDir.Click += (_, _) => MoveCurrentDirectory();
+            loadSrcDir.Click += (_, _) => LoadImages();
+            nextImg.Click += (_, _) => NextImage();
+            prevImg.Click += (_, _) => PreviousImage();
+            move1.Click += (_, _) => MoveImage(1);
+            move2.Click += (_, _) => MoveImage(2);
+            move3.Click += (_, _) => MoveImage(3);
+            move4.Click += (_, _) => MoveImage(4);
+            move5.Click += (_, _) => MoveImage(5);
+            move6.Click += (_, _) => MoveImage(6);
+
+            saveToolStripMenuItem.Click += (_, _) => Save();
+            saveAsToolStripMenuItem.Click += (_, _) => SaveAs();
+            loadToolStripMenuItem.Click += (_, _) => LoadSettings();
+            hotkeysToolStripMenuItem.Click += (_, _) => OpenHotkeyConfig();
+            overwriteToolStripMenuItem.Click += (_, _) => _overWrite = true;
+            renameToolStripMenuItem.Click += (_, _) => _overWrite = false;
+            undoImageMoveToolStripMenuItem.Click += (_, _) => Undo();
+            redoToolStripMenuItem.Click += (_, _) => Redo();
+        }
+
+        private void LoadHotkeys()
+        {
+            var savedHotkeys = Properties.Settings.Default.Hotkeys.Split(',');
+            for (int i = 0; i < savedHotkeys.Length; i++)
             {
-                case 0:
-                    ScaleToggle();
-                    break;
-                case 1:
-                    NextDirectory();
-                    break;
-                case 2:
-                    PreviousDirectory();
-                    break;
-                case 3:
-                    MoveDirectory();
-                    break;
-                case 4:
-                    NextImage();
-                    break;
-                case 5:
-                    PreviousImage();
-                    break;
-                case 6:
-                    imgMove(1);
-                    break;
-                case 7:
-                    imgMove(2);
-                    break;
-                case 8:
-                    imgMove(3);
-                    break;
-                case 9:
-                    imgMove(4);
-                    break;
-                case 10:
-                    imgMove(5);
-                    break;
-                case 11:
-                    imgMove(6);
-                    break;
-                case 12:
-                    Save();
-                    break;
-                case 13:
-                    Undo();
-                    break;
-                case -1: //Key pressed does not correspond to a hotkey.
-                    break;
+                _keys[i] = savedHotkeys[i];
             }
         }
 
-
-        public int HKSwitch(KeyPressEventArgs e)
+        private void LoadDirectory(TextBox targetTextBox)
         {
-            string s = e.KeyChar.ToString();
-            for(int i = 0; i < keys.Length; i++)
+            if (_dialog.ShowDialog() == DialogResult.OK)
             {
-                if(s == keys[i])
+                targetTextBox.Text = _dialog.SelectedPath;
+            }
+        }
+
+        private void HotKeyHandler(object sender, KeyPressEventArgs e)
+        {
+            int actionIndex = Array.IndexOf(_keys, e.KeyChar.ToString());
+            if (actionIndex >= 0)
+            {
+                ExecuteAction(actionIndex);
+            }
+        }
+
+        private void ExecuteAction(int actionIndex)
+        {
+            switch (actionIndex)
+            {
+                case 0: ToggleScaling(); break;
+                case 1: NextDirectory(); break;
+                case 2: PreviousDirectory(); break;
+                case 3: MoveCurrentDirectory(); break;
+                case 4: NextImage(); break;
+                case 5: PreviousImage(); break;
+                case 6: MoveImage(1); break;
+                case 7: MoveImage(2); break;
+                case 8: MoveImage(3); break;
+                case 9: MoveImage(4); break;
+                case 10: MoveImage(5); break;
+                case 11: MoveImage(6); break;
+                case 12: Save(); break;
+                case 13: Undo(); break;
+                default: break;
+            }
+        }
+
+        private void ToggleScaling()
+        {
+            panel1.Focus();
+            _scaling = !_scaling;
+            imgOriginal.Visible = !_scaling;
+            imgScaled.Visible = _scaling;
+            btnScale.Text = _scaling ? "Scaling ON" : "Scaling OFF";
+        }
+
+        public void LoadImages()
+        {
+            _imageList.Clear();
+            _pos = 0;
+            if (!string.IsNullOrEmpty(sourceDir.Text))
+            {
+                var images = Directory.GetFiles(sourceDir.Text);
+                if (images.Any())
                 {
-                    return i;
+                    _imageList.AddRange(images.Reverse());
+                    DisplayCurrentImage();
                 }
             }
-            return -1;
         }
 
-        public void SaveHotkeys()
+        public void DisplayCurrentImage()
         {
-            string s = "";
-            for(int i = 0; i < keys.Length; i++)
-            {
-                if (i < keys.Length - 1)
-                    s += keys[i] + ",";
-                else
-                    s += keys[i];
-            }
-            Properties.Settings.Default.Hotkeys = s;
-            Properties.Settings.Default.Save();
+            if (_pos < 0 || _pos >= _imageList.Count) return;
+
+            _image = Image.FromFile(_imageList[_pos]);
+            imgOriginal.Image = imgScaled.Image = _image;
+
+            string currentImageName = Path.GetFileName(_imageList[_pos]);
+            string nextImageName = (_pos + 1 < _imageList.Count) ? Path.GetFileName(_imageList[_pos + 1]) : "Current image is the last.";
+
+            label1.Text = $"Image Dimensions: {_image.Width}x{_image.Height}";
+            label2.Text = $"Image Name: {currentImageName}";
+            label3.Text = $"Next Image: {nextImageName}";
+            label4.Text = $"Images Remaining: {_imageList.Count}";
+            label5.Text = $"Position: {_pos + 1}";
         }
 
-        public void imgLoad()
+        private void MoveImage(int destIndex)
         {
+            var destination = GetDestinationDirectory(destIndex);
+            if (string.IsNullOrEmpty(destination)) return;
 
-            image = Image.FromFile((string)imageList[pos]);
-            string s = (string)imageList[pos];
-            string[] imgName = s.Split("\\");
-            s = imgName[^1];
-            string[] nextName;
+            var currentImage = _imageList[_pos];
+            var fileName = Path.GetFileName(currentImage);
+            var newImagePath = Path.Combine(destination, fileName);
 
-            string s2;
-            if (pos + 1 < imageList.Count)
+            DisposeCurrentImage();
+
+            if (_overWrite || !File.Exists(newImagePath))
             {
-                s2 = (string)imageList[pos + 1];
-                nextName = s2.Split("\\");
-                s2 = nextName[^1];
+                File.Move(currentImage, newImagePath);
             }
             else
             {
-                s2 = "Current image is the last.";
+                newImagePath = GetUniqueFilePath(newImagePath);
+                File.Move(currentImage, newImagePath);
             }
 
-            imgOriginal.Image = image;
-            imgScaled.Image = image;
-            label1.Text = "Image Dimensions: " + image.Width + "x" +image.Height;
-            label2.Text = "Image Name: " + s;
-            label3.Text = "Next Image: " + s2;
-            label4.Text = "Images Remaining: " + imageList.Count;
-            label5.Text = "Position: " + (pos + 1);
+            var action = new Action(currentImage, newImagePath, ActionType.Image, this);
+            _actions.Add(action);
+            _redoActions.Clear();
+
+            _imageList.RemoveAt(_pos);
+            if (_pos >= _imageList.Count) _pos--;
+
+            if (_pos >= 0) DisplayCurrentImage();
         }
 
-        public void srcLoad()
+        private string GetUniqueFilePath(string filePath)
         {
-            imageList.Clear();
-            pos = 0;
-            string source = sourceDir.Text;
-            if (source != "")
+            var directory = Path.GetDirectoryName(filePath);
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var extension = Path.GetExtension(filePath);
+
+            int count = 1;
+            string newFilePath;
+            do
             {
-                images = Directory.GetFiles(source);
-                if (images.Length > 0)
-                {
-                    for (int i = 0; i < images.Length; i++)
-                    {
-                        imageList.Add(images[i]);
-                    }
-                    imageList.Reverse();
-                    imgLoad();
-                }
-            }
+                newFilePath = Path.Combine(directory, $"{fileName} ({count++}){extension}");
+            } while (File.Exists(newFilePath));
+
+            return newFilePath;
         }
 
-        public void imgMove(int dest)
+        public void DisposeCurrentImage()
         {
-            Action move = new Action("","",Type.Image,this);
-            panel1.Focus();
-            if (dest == 1)
-            {
-                move.destination = dir1.Text;
-            }
-            if (dest == 2)
-            {
-                move.destination = dir2.Text;
-            }
-            if (dest == 3)
-            {
-                move.destination = dir3.Text;
-            }
-            if (dest == 4)
-            {
-                move.destination = dir4.Text;
-            }
-            if (dest == 5)
-            {
-                move.destination = dir5.Text;
-            }
-            if (dest == 6)
-            {
-                move.destination = dir6.Text;
-            }
-            if (!String.IsNullOrEmpty(move.destination))
-            {
-                if (imageList.Count > 0)
-                {
-
-                    movedPos = pos;
-                    move.source = (string)imageList[pos];
-                    string s = (string)imageList[pos];
-                    string[] imgName = s.Split("\\");
-                    s = imgName[^1];
-                    imgScaled.Image.Dispose();
-                    imgOriginal.Image.Dispose();
-                    image.Dispose();
-                    if (imageList.Count == 1)
-                    {
-                        File.Move(move.source, move.destination + "\\" + s);
-                        imageList.RemoveAt(movedPos);
-                        imgOriginal.Image = null;
-                        imgScaled.Image = null;
-                    }
-                    else if (movedPos + 1 == imageList.Count)
-                    {
-                        pos--;
-                        imgLoad();
-                        File.Move(move.source, move.destination + "\\" + s);
-                        imageList.RemoveAt(movedPos);
-
-                    }
-                    else
-                    {
-                        pos++;
-                        imgLoad();
-                        File.Move(move.source, move.destination + "\\" + s);
-                        imageList.RemoveAt(movedPos);
-                        imgScaled.Image.Dispose();
-                        imgOriginal.Image.Dispose();
-                        image.Dispose();
-                        pos--;
-                        imgLoad();
-                    }
-
-                    actions.Add(move);
-                }
-            }
-        }
-
-        public void DirectoriesLoad()
-        {
-            var children = Directory.GetDirectories(parentDirectory);
-            directories.Clear();
-            for (int i = 0; i < children.Length; i++)
-            {
-                directories.Add(children[i]);
-            }
-            dirPos = 0;
-            string s = "";
-            s += directories.Count;
-            label1.Text = s;
-            sourceDir.Text = (string)directories[dirPos];
-            srcLoad();
-        }
-
-        public void SaveAs()
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "ImageHelper Saves | *.ihs";
-            saveFileDialog.DefaultExt = "ihs";
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                System.IO.Stream fileStream = saveFileDialog.OpenFile();
-                System.IO.StreamWriter sw = new System.IO.StreamWriter(fileStream);
-                if (directories.Count == 0)
-                    sw.WriteLine("S");
-                else
-                    sw.WriteLine("M");
-                TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
-                for (int i = 0; i < moveDirs.Length; i++)
-                {
-                    if (moveDirs[i].Text == "")
-                        sw.WriteLine("null");
-                    else
-                        sw.WriteLine(moveDirs[i].Text);
-                }
-                sw.WriteLine(pos);
-                if (sourceDir.Text == "")
-                    sw.WriteLine("null");
-                else
-                    sw.WriteLine(sourceDir.Text);
-                if (directories.Count > 0)
-                {
-                    sw.WriteLine(parentDirectory);
-                    sw.WriteLine(dirPos);
-                    if (moveDirTxt.Text == "")
-                        sw.WriteLine("null");
-                    else
-                        sw.WriteLine(moveDirTxt.Text);
-                }
-                sw.Flush();
-                sw.Close();
-                saveFile = new FileInfo(saveFileDialog.FileName);
-            }
-        }
-
-        public void Save()
-        {
-            if (saveFile != null)
-            {
-                System.IO.File.WriteAllText(saveFile.FullName, string.Empty);
-                System.IO.StreamWriter sw = saveFile.AppendText();
-                if (directories.Count == 0)
-                    sw.WriteLine("S");
-                else
-                    sw.WriteLine("M");
-                TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
-                for (int i = 0; i < moveDirs.Length; i++)
-                {
-                    if (moveDirs[i].Text == "")
-                        sw.WriteLine("null");
-                    else
-                        sw.WriteLine(moveDirs[i].Text);
-                }
-                sw.WriteLine(pos);
-                if (sourceDir.Text == "")
-                    sw.WriteLine("null");
-                else
-                    sw.WriteLine(sourceDir.Text);
-                if (directories.Count > 0)
-                {
-                    sw.WriteLine(parentDirectory);
-                    sw.WriteLine(dirPos);
-                    if (moveDirTxt.Text == "")
-                        sw.WriteLine("null");
-                    else
-                        sw.WriteLine(moveDirTxt.Text);
-                }
-                sw.Flush();
-                sw.Close();
-            }
-            else
-                SaveAs();
-            
-        }
-
-        public void Undo()
-        {
-            Action action = (Action)actions[(actions.Count - 1)];
-            action.Undo();
-
-            
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Save();
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveAs();
-        }
-
-
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            /*
-            *  0   S/M
-            *  1   1
-            *  2   2
-            *  3   3
-            *  4   4
-            *  5   5
-            *  6   6
-            *  7   pos
-            *  8   SrcDirectory
-            *  9   Parent
-            *  10  dirPos
-            *  11  Move Directory         
-            */
-            TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
-            OpenFileDialog open = new OpenFileDialog();
-            open.Filter = "ImageHelper Saves | *.ihs";
-            if (open.ShowDialog() == DialogResult.OK)
-            {
-                string[] lines = System.IO.File.ReadAllLines(open.FileName);
-                if (lines[0] == "S")
-                {
-                    for (int i = 0; i < moveDirs.Length; i++)
-                    {
-                        if (lines[i + 1] != "null")
-                            moveDirs[i].Text = lines[i + 1];
-                    }
-                    if (lines[8] != "null")
-                    {
-                        sourceDir.Text = lines[8];
-                        srcLoad();
-                        pos = Int32.Parse(lines[7]);
-                        imgScaled.Image.Dispose();
-                        imgOriginal.Image.Dispose();
-                        image.Dispose();
-                        imgLoad();
-                    }
-                }
-                else //Multi Case
-                {
-                    for (int i = 0; i < moveDirs.Length; i++)
-                    {
-                        if (lines[i + 1] != "null")
-                            moveDirs[i].Text = lines[i + 1];
-                    }
-                    if (lines[8] != "null")
-                        sourceDir.Text = lines[8];
-                    parentDirectory = lines[9];
-                    if (lines[11] != "null")
-                        moveDirTxt.Text = lines[11];
-                    DirectoriesLoad();
-                    dirPos = Int32.Parse(lines[10]);
-                    sourceDir.Text = (string)directories[dirPos];
-                    imgScaled.Image.Dispose();
-                    imgOriginal.Image.Dispose();
-                    image.Dispose();
-                    srcLoad();
-                    pos = Int32.Parse(lines[7]);
-                    imgScaled.Image.Dispose();
-                    imgOriginal.Image.Dispose();
-                    image.Dispose();
-                    imgLoad();
-                }
-                saveFile = new FileInfo(open.FileName);
-            }
-        }
-
-        private void hotkeysToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            HotKeyConfig popup = new HotKeyConfig();
-            for (int i = 0; i < popup.buttons.Length; i++)
-            {
-                popup.buttons[i].Text = keys[i].ToUpper();
-                popup.Hotkeys[i] = keys[i];
-            }
-
-
-            DialogResult dialogresult = popup.ShowDialog();
-            if (dialogresult == DialogResult.OK)
-            {
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    keys[i] = popup.Hotkeys[i];
-                }
-                SaveHotkeys();
-            }
-            else if (dialogresult == DialogResult.Cancel)
-            {
-                Console.WriteLine("You clicked either Cancel or X button in the top right corner");
-            }
-        }
-        public void ScaleToggle()
-        {
-            panel1.Focus();
-            if (Scaling == true)
-            {
-                imgOriginal.Visible = true;
-                imgScaled.Visible = false;
-                btnScale.Text = "Scaling OFF";
-                Scaling = false;
-            }
-            else
-            {
-                imgOriginal.Visible = false;
-                imgScaled.Visible = true;
-                btnScale.Text = "Scaling ON";
-                Scaling = true;
-            }
-        }
-
-        public void NextDirectory()
-        {
-            panel1.Focus();
-            if (dirPos < directories.Count - 1)
+            if (imgScaled.Image != null)
             {
                 imgScaled.Image.Dispose();
+                imgScaled.Image = null;
+            }
+            if (imgOriginal.Image != null)
+            {
                 imgOriginal.Image.Dispose();
-                image.Dispose();
-                dirPos++;
-                sourceDir.Text = (string)directories[dirPos];
-                srcLoad();
+                imgOriginal.Image = null;
+            }
+            if (_image != null)
+            {
+                _image.Dispose();
+                _image = null;
             }
         }
 
-        public void PreviousDirectory()
+        private string GetDestinationDirectory(int index)
         {
-            panel1.Focus();
-            if (dirPos > 0)
+            return index switch
             {
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                dirPos--;
-                sourceDir.Text = (string)directories[dirPos];
-                srcLoad();
+                1 => dir1.Text,
+                2 => dir2.Text,
+                3 => dir3.Text,
+                4 => dir4.Text,
+                5 => dir5.Text,
+                6 => dir6.Text,
+                _ => string.Empty
+            };
+        }
+
+        public void LoadDirectories()
+        {
+            if (!string.IsNullOrEmpty(_parentDirectory))
+            {
+                _directories.Clear();
+                _directories.AddRange(Directory.GetDirectories(_parentDirectory));
+                _dirPos = 0;
+                if (_directories.Any())
+                {
+                    sourceDir.Text = _directories[_dirPos];
+                    LoadImages();
+                }
             }
         }
 
-        public void MoveDirectory()
+        private void NextDirectory()
         {
             panel1.Focus();
-            Action action = new Action(sourceDir.Text, moveDirTxt.Text, Type.Directory, this);
-            if (!String.IsNullOrEmpty(action.destination))
+            if (_dirPos < _directories.Count - 1)
             {
-                string[] s = sourceDir.Text.Split("\\");
-                string s2 = s[^1];
+                DisposeCurrentImage();
+                _dirPos++;
+                sourceDir.Text = _directories[_dirPos];
+                LoadImages();
+            }
+        }
+
+        private void PreviousDirectory()
+        {
+            panel1.Focus();
+            if (_dirPos > 0)
+            {
+                DisposeCurrentImage();
+                _dirPos--;
+                sourceDir.Text = _directories[_dirPos];
+                LoadImages();
+            }
+        }
+
+        private void MoveCurrentDirectory()
+        {
+            panel1.Focus();
+            var action = new Action(sourceDir.Text, moveDirTxt.Text, ActionType.Directory, this);
+            if (!string.IsNullOrEmpty(action.Destination))
+            {
                 try
                 {
-                    imgScaled.Image.Dispose();
-                    imgOriginal.Image.Dispose();
-                    image.Dispose();
-                    Directory.Move(action.source, action.destination + "\\" + s2);
-                    actions.Add(action);
-                    if (directories.Count > 0)
+                    var dirName = Path.GetFileName(sourceDir.Text);
+                    FileSystem.MoveDirectory(action.Source, Path.Combine(action.Destination, dirName), true);
+                    _directories.RemoveAt(_dirPos);
+                    if (_directories.Any())
                     {
-                        directories.RemoveAt(dirPos);
-                        Debug.WriteLine((string)directories[dirPos]);
-                        sourceDir.Text = (string)directories[dirPos];
-                        srcLoad();
+                        sourceDir.Text = _directories[_dirPos];
+                        LoadImages();
                     }
+                    else
+                    {
+                        ClearImages();
+                    }
+                    _actions.Add(action);
                 }
-                catch (Exception x)
+                catch (Exception ex)
                 {
-                    Debug.WriteLine(x.Message);
+                    Debug.WriteLine(ex.Message);
                 }
             }
         }
 
-        public void PreviousImage()
+        private void ClearImages()
         {
-            panel1.Focus();
-            if (pos > 0)
-            {
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                pos--;
-                imgLoad();
-            }
+            imgScaled.Image = null;
+            imgOriginal.Image = null;
+            _imageList.Clear();
         }
 
-        public void NextImage()
+        private void NextImage()
         {
             panel1.Focus();
-            if (pos < imageList.Count - 1)
+            if (_pos < _imageList.Count - 1)
             {
-                imgScaled.Image.Dispose();
-                imgOriginal.Image.Dispose();
-                image.Dispose();
-                pos++;
-                imgLoad();
+                DisposeCurrentImage();
+                _pos++;
+                DisplayCurrentImage();
             }
             else
             {
@@ -580,214 +345,257 @@ namespace ImageHelper
             }
         }
 
-        private void SourceLoad(object sender, System.EventArgs e)
+        private void PreviousImage()
         {
             panel1.Focus();
-            dialog.ShowDialog();
-            sourceDir.Text = dialog.SelectedPath;
-        }
-
-        private void dir1Click(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            dir1.Text = dialog.SelectedPath;
-        }
-
-        private void dir2Click(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            dir2.Text = dialog.SelectedPath;
-        }
-
-        private void dir3Click(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            dir3.Text = dialog.SelectedPath;
-        }
-
-        private void dir4Click(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            dir4.Text = dialog.SelectedPath;
-        }
-
-        private void dir5Click(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            dir5.Text = dialog.SelectedPath;
-        }
-
-        private void dir6Click(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            dir6.Text = dialog.SelectedPath;
-        }
-
-        private void moveDirClick(object sender, System.EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            moveDirTxt.Text = dialog.SelectedPath;
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            ScaleToggle();
-        }
-
-        private void loadSrcDir_Click(object sender, EventArgs e)
-        {
-            panel1.Focus();
-            srcLoad();
-        }
-
-        private void dirsLoad_Click(object sender, EventArgs e)
-        {
-            panel1.Focus();
-            dialog.ShowDialog();
-            parentDirectory = dialog.SelectedPath;
-            if (parentDirectory != "") 
+            if (_pos > 0)
             {
-                DirectoriesLoad();
+                DisposeCurrentImage();
+                _pos--;
+                DisplayCurrentImage();
             }
         }
 
-        private void nextDir_Click(object sender, EventArgs e)
+        private void Save()
         {
-            NextDirectory();
+            if (_saveFile != null)
+            {
+                SaveToFile(_saveFile.FullName);
+            }
+            else
+            {
+                SaveAs();
+            }
         }
 
-        private void prevDir_Click(object sender, EventArgs e)
+        private void SaveAs()
         {
-            PreviousDirectory();
+            using SaveFileDialog saveFileDialog = new()
+            {
+                Filter = "ImageHelper Saves | *.ihs",
+                DefaultExt = "ihs"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                SaveToFile(saveFileDialog.FileName);
+                _saveFile = new FileInfo(saveFileDialog.FileName);
+            }
         }
 
-        private void moveDir_Click(object sender, EventArgs e)
+        private void SaveToFile(string filePath)
         {
-            MoveDirectory();
+            using var sw = new StreamWriter(filePath);
+            sw.WriteLine(_directories.Any() ? "M" : "S");
+
+            TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
+            foreach (var dir in moveDirs)
+            {
+                sw.WriteLine(string.IsNullOrEmpty(dir.Text) ? "null" : dir.Text);
+            }
+
+            sw.WriteLine(_pos);
+            sw.WriteLine(string.IsNullOrEmpty(sourceDir.Text) ? "null" : sourceDir.Text);
+
+            if (_directories.Any())
+            {
+                sw.WriteLine(_parentDirectory);
+                sw.WriteLine(_dirPos);
+                sw.WriteLine(string.IsNullOrEmpty(moveDirTxt.Text) ? "null" : moveDirTxt.Text);
+            }
         }
 
-        private void prevImg_Click(object sender, EventArgs e)
+        private void LoadSettings()
         {
-            PreviousImage();
+            using OpenFileDialog open = new()
+            {
+                Filter = "ImageHelper Saves | *.ihs"
+            };
+
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                var lines = File.ReadAllLines(open.FileName);
+                LoadFromSettings(lines);
+                _saveFile = new FileInfo(open.FileName);
+            }
         }
 
-        private void nextImg_Click(object sender, EventArgs e)
+        private void LoadFromSettings(string[] lines)
         {
-            NextImage();
+            TextBox[] moveDirs = { dir1, dir2, dir3, dir4, dir5, dir6 };
+
+            for (int i = 0; i < moveDirs.Length; i++)
+            {
+                moveDirs[i].Text = lines[i + 1] != "null" ? lines[i + 1] : string.Empty;
+            }
+
+            _pos = int.Parse(lines[7]);
+            sourceDir.Text = lines[8] != "null" ? lines[8] : string.Empty;
+
+            if (lines[0] == "M")
+            {
+                _parentDirectory = lines[9];
+                moveDirTxt.Text = lines[11] != "null" ? lines[11] : string.Empty;
+                LoadDirectories();
+                _dirPos = int.Parse(lines[10]);
+                sourceDir.Text = _directories[_dirPos];
+                LoadImages();
+            }
+            else if (lines[0] == "S" && !string.IsNullOrEmpty(sourceDir.Text))
+            {
+                LoadImages();
+            }
+
+            DisplayCurrentImage();
         }
 
-        private void move1_Click(object sender, EventArgs e)
+        private void OpenHotkeyConfig()
         {
-            imgMove(1);
+            using HotKeyConfig popup = new();
+            for (int i = 0; i < popup._buttons.Count; i++)
+            {
+                popup._buttons[i].Text = _keys[i].ToUpper();
+                popup.Hotkeys[i] = _keys[i];
+            }
+
+            var dialogResult = popup.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                for (int i = 0; i < _keys.Length; i++)
+                {
+                    _keys[i] = popup.Hotkeys[i];
+                }
+                SaveHotkeys();
+            }
         }
 
-        private void move2_Click(object sender, EventArgs e)
+        private void SaveHotkeys()
         {
-            imgMove(2);
+            Properties.Settings.Default.Hotkeys = string.Join(",", _keys);
+            Properties.Settings.Default.Save();
         }
 
-        private void move3_Click(object sender, EventArgs e)
+        private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            imgMove(3);
+            if (e.Button == MouseButtons.Left)
+            {
+                _isPanning = true;
+                _panStartPoint = new Point(e.X, e.Y);
+                Cursor = Cursors.Hand;
+            }
         }
 
-        private void move4_Click(object sender, EventArgs e)
+        private void PictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            imgMove(4);
+            if (_isPanning)
+            {
+                Point newPos = imgOriginal.PointToScreen(new Point(e.X, e.Y));
+                newPos.Offset(-_panStartPoint.X, -_panStartPoint.Y);
+                imgOriginal.Location = imgOriginal.Parent.PointToClient(newPos);
+            }
         }
 
-        private void move5_Click(object sender, EventArgs e)
+        private void PictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            imgMove(5);
+            if (e.Button == MouseButtons.Left)
+            {
+                _isPanning = false;
+                Cursor = Cursors.Default;
+            }
         }
 
-        private void undoImageMoveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Undo()
         {
-            Undo();
+            if (_actions.Any())
+            {
+                var lastAction = _actions.Last();
+                lastAction.Undo();
+                _actions.RemoveAt(_actions.Count - 1);
+                _redoActions.Push(lastAction);
+            }
         }
 
-        private void move6_Click(object sender, EventArgs e)
+        private void Redo()
         {
-            imgMove(6);
+            if (_redoActions.Any())
+            {
+                var lastUndoneAction = _redoActions.Pop();
+                lastUndoneAction.Redo();
+                _actions.Add(lastUndoneAction);
+            }
         }
     }
-    public enum Type { Image, Directory };
+
+    public enum ActionType { Image, Directory }
 
     public class Action
     {
-        MainForm form;
-        public string source, destination;
-        public Type type;
-        
+        private readonly MainForm _form;
+        public string Source { get; }
+        public string Destination { get; }
+        public ActionType Type { get; }
 
-        public Action(string src, string dest, Type ActionType, MainForm main)
+        public Action(string src, string dest, ActionType actionType, MainForm form)
         {
-            source = src;
-            destination = dest;
-            type = ActionType;
-            form = main;
-            
+            Source = src;
+            Destination = dest;
+            Type = actionType;
+            _form = form;
         }
 
         public void Undo()
         {
-            if(type == Type.Image)
+            if (Type == ActionType.Image)
             {
-                if (form.movedPos > -1)
-                {
-                    string s = source;
-                    string[] imgName = s.Split("\\");
-                    s = imgName[^1];
-                    form.imgScaled.Image.Dispose();
-                    form.imgOriginal.Image.Dispose();
-                    form.image.Dispose();
-                    File.Move(destination + "\\" + s, source);
-                    form.srcLoad();
-                    form.imgScaled.Image.Dispose();
-                    form.imgOriginal.Image.Dispose();
-                    form.image.Dispose();
-                    form.pos = form.movedPos;
-                    form.imgLoad();
-                    form.actions.RemoveAt(form.actions.Count - 1);
-                }
-                
+                _form.DisposeCurrentImage();
+                ForceGarbageCollection();
+                var fileName = Path.GetFileName(Source);
+                File.Move(Destination, Source);
+                _form.DisposeCurrentImage();
+                _form.LoadImages();
+                _form.DisplayCurrentImage();
             }
-            else
+            else if (Type == ActionType.Directory)
             {
-                form.panel1.Focus();
-                if (!String.IsNullOrEmpty(destination))
-                {
-                    string[] s = source.Split("\\");
-                    string s2 = s[^1];
-                    try
-                    {
-                        form.imgScaled.Image.Dispose();
-                        form.imgOriginal.Image.Dispose();
-                        form.image.Dispose();
-                        Directory.Move(destination + "\\" + s2, source);
-                        var pos = form.dirPos;
-                        form.DirectoriesLoad();
-                        form.imgScaled.Image.Dispose();
-                        form.imgOriginal.Image.Dispose();
-                        form.image.Dispose();
-                        form.dirPos = pos;
-                        form.srcLoad();
-                        form.actions.RemoveAt(form.actions.Count - 1);
-                    }
-                    catch (Exception x)
-                    {
-                        Debug.WriteLine(x.Message);
-                    }
-                }
+                _form.DisposeCurrentImage();
+                var dirName = Path.GetFileName(Source);
+                Directory.Move(Path.Combine(Destination, dirName), Source);
+                _form.LoadDirectories();
+                _form._dirPos = _form._directories.IndexOf(Source);
+                _form.LoadImages();
             }
-           
         }
+
+        public void Redo()
+        {
+            if (Type == ActionType.Image)
+            {
+                _form.DisposeCurrentImage();
+                ForceGarbageCollection();
+                var fileName = Path.GetFileName(Source);
+                File.Move(Source, Destination);
+                _form.DisposeCurrentImage();
+                _form.LoadImages();
+                _form.DisplayCurrentImage();
+            }
+            else if (Type == ActionType.Directory)
+            {
+                _form.DisposeCurrentImage();
+                var dirName = Path.GetFileName(Source);
+                Directory.Move(Source, Path.Combine(Destination, dirName));
+                _form.LoadDirectories();
+                _form._dirPos = _form._directories.IndexOf(Source);
+                _form.LoadImages();
+            }
+        }
+        //we need this because even though we dispose the image for some reason it keeps a file lock on it
+        private void ForceGarbageCollection()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+
+
     }
 }

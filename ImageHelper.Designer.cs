@@ -68,6 +68,10 @@ namespace ImageHelper
             this.undoImageMoveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overwriteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overwriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgScaled)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgOriginal)).BeginInit();
@@ -82,7 +86,6 @@ namespace ImageHelper
             this.btnScale.TabIndex = 3;
             this.btnScale.Text = "Scaling OFF";
             this.btnScale.UseVisualStyleBackColor = true;
-            this.btnScale.Click += new System.EventHandler(this.button3_Click);
             // 
             // dirsLoad
             // 
@@ -92,7 +95,6 @@ namespace ImageHelper
             this.dirsLoad.TabIndex = 4;
             this.dirsLoad.Text = "Load Directories";
             this.dirsLoad.UseVisualStyleBackColor = true;
-            this.dirsLoad.Click += new System.EventHandler(this.dirsLoad_Click);
             // 
             // nextDir
             // 
@@ -102,7 +104,6 @@ namespace ImageHelper
             this.nextDir.TabIndex = 5;
             this.nextDir.Text = "Next Directory";
             this.nextDir.UseVisualStyleBackColor = true;
-            this.nextDir.Click += new System.EventHandler(this.nextDir_Click);
             // 
             // prevDir
             // 
@@ -112,7 +113,6 @@ namespace ImageHelper
             this.prevDir.TabIndex = 6;
             this.prevDir.Text = "Previous Directory";
             this.prevDir.UseVisualStyleBackColor = true;
-            this.prevDir.Click += new System.EventHandler(this.prevDir_Click);
             // 
             // nextImg
             // 
@@ -125,7 +125,6 @@ namespace ImageHelper
             this.nextImg.TabIndex = 8;
             this.nextImg.Text = "Next";
             this.nextImg.UseVisualStyleBackColor = true;
-            this.nextImg.Click += new System.EventHandler(this.nextImg_Click);
             // 
             // prevImg
             // 
@@ -138,7 +137,6 @@ namespace ImageHelper
             this.prevImg.TabIndex = 9;
             this.prevImg.Text = "Back";
             this.prevImg.UseVisualStyleBackColor = true;
-            this.prevImg.Click += new System.EventHandler(this.prevImg_Click);
             // 
             // moveDir
             // 
@@ -148,90 +146,82 @@ namespace ImageHelper
             this.moveDir.TabIndex = 10;
             this.moveDir.Text = "Move Directory";
             this.moveDir.UseVisualStyleBackColor = true;
-            this.moveDir.Click += new System.EventHandler(this.moveDir_Click);
             // 
             // loadSrcDir
             // 
             this.loadSrcDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadSrcDir.Location = new System.Drawing.Point(1542, 56);
+            this.loadSrcDir.Location = new System.Drawing.Point(1539, 46);
             this.loadSrcDir.Name = "loadSrcDir";
             this.loadSrcDir.Size = new System.Drawing.Size(131, 41);
             this.loadSrcDir.TabIndex = 12;
             this.loadSrcDir.Text = "Load Directory";
             this.loadSrcDir.UseVisualStyleBackColor = true;
-            this.loadSrcDir.Click += new System.EventHandler(this.loadSrcDir_Click);
             // 
             // move1
             // 
             this.move1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.move1.Location = new System.Drawing.Point(1542, 135);
+            this.move1.Location = new System.Drawing.Point(1539, 125);
             this.move1.Name = "move1";
             this.move1.Size = new System.Drawing.Size(131, 41);
             this.move1.TabIndex = 13;
             this.move1.Text = "Move Image";
             this.move1.UseVisualStyleBackColor = true;
-            this.move1.Click += new System.EventHandler(this.move1_Click);
             // 
             // move2
             // 
             this.move2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.move2.Location = new System.Drawing.Point(1542, 182);
+            this.move2.Location = new System.Drawing.Point(1539, 172);
             this.move2.Name = "move2";
             this.move2.Size = new System.Drawing.Size(131, 41);
             this.move2.TabIndex = 14;
             this.move2.Text = "Move Image";
             this.move2.UseVisualStyleBackColor = true;
-            this.move2.Click += new System.EventHandler(this.move2_Click);
             // 
             // move3
             // 
             this.move3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.move3.Location = new System.Drawing.Point(1542, 229);
+            this.move3.Location = new System.Drawing.Point(1539, 219);
             this.move3.Name = "move3";
             this.move3.Size = new System.Drawing.Size(131, 41);
             this.move3.TabIndex = 15;
             this.move3.Text = "Move Image";
             this.move3.UseVisualStyleBackColor = true;
-            this.move3.Click += new System.EventHandler(this.move3_Click);
             // 
             // move4
             // 
             this.move4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.move4.Location = new System.Drawing.Point(1542, 276);
+            this.move4.Location = new System.Drawing.Point(1539, 266);
             this.move4.Name = "move4";
             this.move4.Size = new System.Drawing.Size(131, 41);
             this.move4.TabIndex = 16;
             this.move4.Text = "Move Image";
             this.move4.UseVisualStyleBackColor = true;
-            this.move4.Click += new System.EventHandler(this.move4_Click);
             // 
             // move5
             // 
             this.move5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.move5.Location = new System.Drawing.Point(1542, 323);
+            this.move5.Location = new System.Drawing.Point(1539, 313);
             this.move5.Name = "move5";
             this.move5.Size = new System.Drawing.Size(131, 41);
             this.move5.TabIndex = 17;
             this.move5.Text = "Move Image";
             this.move5.UseVisualStyleBackColor = true;
-            this.move5.Click += new System.EventHandler(this.move5_Click);
             // 
             // move6
             // 
             this.move6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.move6.Location = new System.Drawing.Point(1542, 370);
+            this.move6.Location = new System.Drawing.Point(1539, 360);
             this.move6.Name = "move6";
             this.move6.Size = new System.Drawing.Size(131, 41);
             this.move6.TabIndex = 18;
             this.move6.Text = "Move Image";
             this.move6.UseVisualStyleBackColor = true;
-            this.move6.Click += new System.EventHandler(this.move6_Click);
             // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1542, 454);
+            this.label1.Location = new System.Drawing.Point(1539, 444);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(108, 15);
             this.label1.TabIndex = 19;
@@ -241,7 +231,7 @@ namespace ImageHelper
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1542, 481);
+            this.label2.Location = new System.Drawing.Point(1539, 471);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(78, 15);
             this.label2.TabIndex = 20;
@@ -251,7 +241,7 @@ namespace ImageHelper
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1542, 511);
+            this.label3.Location = new System.Drawing.Point(1539, 501);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(71, 15);
             this.label3.TabIndex = 21;
@@ -261,7 +251,7 @@ namespace ImageHelper
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1542, 536);
+            this.label4.Location = new System.Drawing.Point(1539, 526);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(108, 15);
             this.label4.TabIndex = 22;
@@ -271,7 +261,7 @@ namespace ImageHelper
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1542, 564);
+            this.label5.Location = new System.Drawing.Point(1539, 554);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 15);
             this.label5.TabIndex = 23;
@@ -280,7 +270,7 @@ namespace ImageHelper
             // dir2
             // 
             this.dir2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dir2.Location = new System.Drawing.Point(1679, 192);
+            this.dir2.Location = new System.Drawing.Point(1676, 182);
             this.dir2.Name = "dir2";
             this.dir2.Size = new System.Drawing.Size(173, 23);
             this.dir2.TabIndex = 25;
@@ -288,7 +278,7 @@ namespace ImageHelper
             // dir3
             // 
             this.dir3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dir3.Location = new System.Drawing.Point(1679, 239);
+            this.dir3.Location = new System.Drawing.Point(1676, 229);
             this.dir3.Name = "dir3";
             this.dir3.Size = new System.Drawing.Size(173, 23);
             this.dir3.TabIndex = 26;
@@ -296,7 +286,7 @@ namespace ImageHelper
             // dir4
             // 
             this.dir4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dir4.Location = new System.Drawing.Point(1679, 286);
+            this.dir4.Location = new System.Drawing.Point(1676, 276);
             this.dir4.Name = "dir4";
             this.dir4.Size = new System.Drawing.Size(173, 23);
             this.dir4.TabIndex = 27;
@@ -304,7 +294,7 @@ namespace ImageHelper
             // dir5
             // 
             this.dir5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dir5.Location = new System.Drawing.Point(1679, 333);
+            this.dir5.Location = new System.Drawing.Point(1676, 323);
             this.dir5.Name = "dir5";
             this.dir5.Size = new System.Drawing.Size(173, 23);
             this.dir5.TabIndex = 28;
@@ -312,7 +302,7 @@ namespace ImageHelper
             // dir6
             // 
             this.dir6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dir6.Location = new System.Drawing.Point(1679, 380);
+            this.dir6.Location = new System.Drawing.Point(1676, 370);
             this.dir6.Name = "dir6";
             this.dir6.Size = new System.Drawing.Size(173, 23);
             this.dir6.TabIndex = 29;
@@ -350,7 +340,7 @@ namespace ImageHelper
             // dir1
             // 
             this.dir1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.dir1.Location = new System.Drawing.Point(1679, 145);
+            this.dir1.Location = new System.Drawing.Point(1676, 135);
             this.dir1.Name = "dir1";
             this.dir1.Size = new System.Drawing.Size(173, 23);
             this.dir1.TabIndex = 24;
@@ -358,7 +348,7 @@ namespace ImageHelper
             // sourceDir
             // 
             this.sourceDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.sourceDir.Location = new System.Drawing.Point(1679, 66);
+            this.sourceDir.Location = new System.Drawing.Point(1676, 56);
             this.sourceDir.Name = "sourceDir";
             this.sourceDir.Size = new System.Drawing.Size(173, 23);
             this.sourceDir.TabIndex = 11;
@@ -387,7 +377,8 @@ namespace ImageHelper
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.loadToolStripMenuItem,
-            this.undoImageMoveToolStripMenuItem});
+            this.undoImageMoveToolStripMenuItem,
+            this.redoToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -395,35 +386,32 @@ namespace ImageHelper
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadToolStripMenuItem.Text = "Load";
-            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // undoImageMoveToolStripMenuItem
             // 
             this.undoImageMoveToolStripMenuItem.Name = "undoImageMoveToolStripMenuItem";
-            this.undoImageMoveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.undoImageMoveToolStripMenuItem.Text = "Undo Image Move";
-            this.undoImageMoveToolStripMenuItem.Click += new System.EventHandler(this.undoImageMoveToolStripMenuItem_Click);
+            this.undoImageMoveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoImageMoveToolStripMenuItem.Text = "Undo";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hotkeysToolStripMenuItem});
+            this.hotkeysToolStripMenuItem,
+            this.overwriteFileToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -431,9 +419,34 @@ namespace ImageHelper
             // hotkeysToolStripMenuItem
             // 
             this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
-            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.hotkeysToolStripMenuItem.Text = "Hotkeys";
-            this.hotkeysToolStripMenuItem.Click += new System.EventHandler(this.hotkeysToolStripMenuItem_Click);
+            // 
+            // overwriteFileToolStripMenuItem
+            // 
+            this.overwriteFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.overwriteToolStripMenuItem,
+            this.renameToolStripMenuItem});
+            this.overwriteFileToolStripMenuItem.Name = "overwriteFileToolStripMenuItem";
+            this.overwriteFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            // 
+            // overwriteToolStripMenuItem
+            // 
+            this.overwriteToolStripMenuItem.Name = "overwriteToolStripMenuItem";
+            this.overwriteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.overwriteToolStripMenuItem.Text = "Overwrite";
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.redoToolStripMenuItem.Text = "Redo";
             // 
             // MainForm
             // 
@@ -525,6 +538,10 @@ namespace ImageHelper
         public System.Windows.Forms.TextBox dir1;
         public System.Windows.Forms.TextBox dir5;
         public System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripMenuItem overwriteFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem overwriteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
     }
 }
 
